@@ -1,0 +1,94 @@
+<ion-header [translucent]="true">
+  <ion-toolbar color="primary">
+    <ion-title>BU When?</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="login-content">
+  <div class="login-container">
+    <!-- Logo and Header -->
+    <div class="header-section">
+      <div class="logo-container">
+        <h1>BU When?</h1>
+        <p>Baliuag University Calendar of Activities</p>
+      </div>
+    </div>
+
+    <!-- Login Form -->
+    <form [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+      <ion-card>
+        <ion-card-header>
+          <ion-card-title>Login to Your Account</ion-card-title>
+        </ion-card-header>
+        
+        <ion-card-content>
+          <!-- Email Input -->
+          <ion-item>
+            <ion-input
+              type="email"
+              formControlName="email"
+              placeholder="Enter your email"
+              [class.ion-invalid]="email?.invalid && email?.touched"
+              [class.ion-valid]="email?.valid && email?.touched">
+            </ion-input>
+          </ion-item>
+          <div class="error-message" *ngIf="email?.invalid && email?.touched">
+            <ion-text color="danger">
+              <small *ngIf="email?.errors?.['required']">Email is required</small>
+              <small *ngIf="email?.errors?.['email']">Please enter a valid email</small>
+            </ion-text>
+          </div>
+
+          <!-- Password Input -->
+          <ion-item>
+            <ion-input
+              type="password"
+              formControlName="password"
+              placeholder="Enter your password"
+              [class.ion-invalid]="password?.invalid && password?.touched"
+              [class.ion-valid]="password?.valid && password?.touched">
+            </ion-input>
+          </ion-item>
+          <div class="error-message" *ngIf="password?.invalid && password?.touched">
+            <ion-text color="danger">
+              <small *ngIf="password?.errors?.['required']">Password is required</small>
+              <small *ngIf="password?.errors?.['minlength']">Password must be at least 6 characters</small>
+            </ion-text>
+          </div>
+
+          <!-- Login Button -->
+          <ion-button 
+            expand="block" 
+            type="submit" 
+            [disabled]="loginForm.invalid || isSubmitting"
+            class="login-button">
+            <ion-spinner *ngIf="isSubmitting" slot="start"></ion-spinner>
+            {{ isSubmitting ? 'Logging in...' : 'Login' }}
+          </ion-button>
+
+          <!-- Demo Credentials -->
+          <div class="demo-credentials">
+       
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </form>
+
+    <!-- Social Login Options -->
+    <div class="social-login">
+      <ion-text color="medium">
+        <p>OR SIGN IN WITH</p>
+      </ion-text>
+      <div class="social-buttons">
+        <ion-button fill="outline" size="default">
+          <ion-icon name="logo-google" slot="start"></ion-icon>
+          Google
+        </ion-button>
+        <ion-button fill="outline" size="default">
+          <ion-icon name="logo-facebook" slot="start"></ion-icon>
+          Facebook
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>
