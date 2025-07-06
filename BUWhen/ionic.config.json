@@ -1,0 +1,7 @@
+{
+  "name": "BUWhen",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
