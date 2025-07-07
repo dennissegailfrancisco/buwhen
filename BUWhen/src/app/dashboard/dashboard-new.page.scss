@@ -1,0 +1,365 @@
+// Color Variables
+:root {
+  --dashboard-bg: #f5f3e8;
+  --card-bg: #ffffff;
+  --text-primary: #2c3e50;
+  --text-secondary: #7f8c8d;
+  --accent-green: #8fbc8f;
+  --button-blue: #4a90e2;
+  --border-light: #e8e6db;
+}
+
+// Header Styles
+.custom-header {
+  --background: var(--dashboard-bg);
+  --color: var(--text-primary);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.header-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  text-align: center;
+}
+
+// Content Styles
+.dashboard-content {
+  --background: var(--dashboard-bg);
+  --padding-top: 0;
+  --padding-bottom: 80px; // Space for bottom navigation
+}
+
+// List View Styles
+.list-view {
+  padding: 20px 16px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 16px 0;
+}
+
+// Bulletin Board Section
+.bulletin-section {
+  margin-bottom: 32px;
+}
+
+.bulletin-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin: 0;
+}
+
+.bulletin-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+}
+
+.bulletin-label {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.bulletin-arrow {
+  color: var(--text-secondary);
+  font-size: 20px;
+}
+
+// Upcoming Events Section
+.upcoming-section {
+  .section-header {
+    margin-bottom: 16px;
+  }
+
+  .filter-controls {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+    align-items: center;
+  }
+
+  .custom-searchbar {
+    flex: 1;
+    --background: var(--card-bg);
+    --color: var(--text-primary);
+    --placeholder-color: var(--text-secondary);
+    --icon-color: var(--text-secondary);
+    border-radius: 8px;
+    padding: 0;
+    
+    .searchbar-input-container {
+      border-radius: 8px;
+    }
+  }
+
+  .filter-button {
+    --color: var(--button-blue);
+    --border-color: var(--button-blue);
+    height: 40px;
+    min-width: auto;
+  }
+}
+
+// Events List
+.events-list {
+  margin-top: 16px;
+}
+
+.event-item-card {
+  background: var(--accent-green);
+  border-radius: 12px;
+  margin: 0 0 12px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  
+  ion-card-content {
+    padding: 0;
+  }
+}
+
+.event-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 16px;
+}
+
+.event-icon {
+  width: 40px;
+  height: 40px;
+  background: var(--card-bg);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  
+  ion-icon {
+    font-size: 20px;
+    color: var(--accent-green);
+  }
+}
+
+.event-details {
+  flex: 1;
+  
+  .event-title {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--card-bg);
+    margin: 0 0 4px 0;
+  }
+  
+  .event-meta {
+    font-size: 12px;
+    color: var(--card-bg);
+    opacity: 0.9;
+    margin: 0 0 4px 0;
+  }
+  
+  .event-venue {
+    font-size: 12px;
+    color: var(--card-bg);
+    opacity: 0.8;
+    margin: 0;
+  }
+}
+
+.event-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  
+  .more-text {
+    font-size: 14px;
+    color: var(--card-bg);
+    font-weight: 500;
+  }
+  
+  ion-icon {
+    font-size: 18px;
+    color: var(--card-bg);
+  }
+}
+
+// Calendar View Styles
+.calendar-view {
+  padding: 20px 16px;
+  height: 100%;
+}
+
+.calendar-header {
+  margin-bottom: 20px;
+}
+
+.calendar-segment {
+  margin-top: 16px;
+  border-radius: 8px;
+  --background: var(--card-bg);
+}
+
+.calendar-container {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: calc(100vh - 300px);
+  overflow: auto;
+}
+
+// FullCalendar Custom Styles
+::ng-deep {
+  .fc {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  }
+  
+  .fc-header-toolbar {
+    margin-bottom: 1em;
+    
+    .fc-toolbar-chunk {
+      .fc-button-group {
+        .fc-button {
+          background: var(--button-blue);
+          border-color: var(--button-blue);
+          font-size: 12px;
+          padding: 6px 12px;
+        }
+      }
+    }
+  }
+  
+  .fc-daygrid-event {
+    border-radius: 4px;
+    border: none;
+    font-size: 11px;
+    padding: 2px 4px;
+  }
+  
+  .fc-event-title {
+    font-weight: 500;
+  }
+  
+  .fc-day-today {
+    background-color: rgba(74, 144, 226, 0.1) !important;
+  }
+}
+
+// Bottom Navigation
+.bottom-navigation {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+.custom-tab-bar {
+  --background: var(--card-bg);
+  --color: var(--text-secondary);
+  border-top: 1px solid var(--border-light);
+  height: 80px;
+  
+  ion-tab-button {
+    --color: var(--text-secondary);
+    --color-selected: var(--button-blue);
+    
+    &.active {
+      --color: var(--button-blue);
+      
+      ion-icon {
+        color: var(--button-blue);
+      }
+      
+      ion-label {
+        color: var(--button-blue);
+        font-weight: 600;
+      }
+    }
+    
+    ion-icon {
+      font-size: 22px;
+      margin-bottom: 4px;
+    }
+    
+    ion-label {
+      font-size: 12px;
+      font-weight: 500;
+    }
+  }
+}
+
+// Floating Action Button
+.fab-create {
+  bottom: 100px; // Above bottom navigation
+  
+  ion-fab-button {
+    --background: var(--button-blue);
+    --box-shadow: 0 4px 16px rgba(74, 144, 226, 0.3);
+    width: 56px;
+    height: 56px;
+  }
+}
+
+// No Events Message
+.no-events {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-secondary);
+  
+  ion-icon {
+    margin-bottom: 16px;
+    opacity: 0.5;
+    color: var(--text-secondary);
+  }
+  
+  h3 {
+    margin: 16px 0 8px 0;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+  
+  p {
+    margin: 0;
+    font-size: 14px;
+  }
+}
+
+// Responsive Design
+@media (max-width: 768px) {
+  .list-view {
+    padding: 16px 12px;
+  }
+  
+  .calendar-view {
+    padding: 16px 12px;
+  }
+  
+  .filter-controls {
+    flex-direction: column;
+    gap: 8px;
+    
+    .custom-searchbar {
+      width: 100%;
+    }
+  }
+  
+  .calendar-container {
+    height: calc(100vh - 250px);
+  }
+}
+
+// iOS specific adjustments
+.ios {
+  .bottom-navigation {
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+  
+  .dashboard-content {
+    --padding-bottom: calc(80px + env(safe-area-inset-bottom));
+  }
+}

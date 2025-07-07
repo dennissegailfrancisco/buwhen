@@ -1,0 +1,149 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-title>{{ mode === 'create' ? 'Create Event' : 'Edit Event' }}</ion-title>
+    <ion-buttons slot="end">
+      <ion-button fill="clear" (click)="dismiss()">
+        <ion-icon name="close"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()">
+    <div class="form-container">
+      <!-- Event Title -->
+      <ion-item class="form-item">
+        <ion-label position="stacked">Event Title *</ion-label>
+        <ion-input 
+          formControlName="title"
+          placeholder="Enter event title"
+          type="text">
+        </ion-input>
+      </ion-item>
+      <div class="error-message" *ngIf="title?.invalid && title?.touched">
+        <span *ngIf="title?.errors?.['required']">Event title is required</span>
+        <span *ngIf="title?.errors?.['minlength']">Title must be at least 3 characters</span>
+      </div>
+
+      <!-- Event Description -->
+      <ion-item class="form-item">
+        <ion-label position="stacked">Description *</ion-label>
+        <ion-textarea 
+          formControlName="description"
+          placeholder="Enter event description"
+          rows="4"
+          autoGrow="true">
+        </ion-textarea>
+      </ion-item>
+      <div class="error-message" *ngIf="description?.invalid && description?.touched">
+        <span *ngIf="description?.errors?.['required']">Description is required</span>
+        <span *ngIf="description?.errors?.['minlength']">Description must be at least 10 characters</span>
+      </div>
+
+      <!-- Date and Time Row -->
+      <ion-row>
+        <ion-col size="6">
+          <ion-item class="form-item">
+            <ion-label position="stacked">Date *</ion-label>
+            <ion-datetime-button datetime="date-picker"></ion-datetime-button>
+          </ion-item>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime 
+                id="date-picker"
+                presentation="date"
+                [min]="today"
+                formControlName="date">
+              </ion-datetime>
+            </ng-template>
+          </ion-modal>
+          <div class="error-message" *ngIf="date?.invalid && date?.touched">
+            <span *ngIf="date?.errors?.['required']">Date is required</span>
+          </div>
+        </ion-col>
+        
+        <ion-col size="6">
+          <ion-item class="form-item">
+            <ion-label position="stacked">Time *</ion-label>
+            <ion-datetime-button datetime="time-picker"></ion-datetime-button>
+          </ion-item>
+          <ion-modal [keepContentsMounted]="true">
+            <ng-template>
+              <ion-datetime 
+                id="time-picker"
+                presentation="time"
+                formControlName="time">
+              </ion-datetime>
+            </ng-template>
+          </ion-modal>
+          <div class="error-message" *ngIf="time?.invalid && time?.touched">
+            <span *ngIf="time?.errors?.['required']">Time is required</span>
+          </div>
+        </ion-col>
+      </ion-row>
+
+      <!-- Venue -->
+      <ion-item class="form-item">
+        <ion-label position="stacked">Venue *</ion-label>
+        <ion-input 
+          formControlName="venue"
+          placeholder="Enter event venue"
+          type="text">
+        </ion-input>
+      </ion-item>
+      <div class="error-message" *ngIf="venue?.invalid && venue?.touched">
+        <span *ngIf="venue?.errors?.['required']">Venue is required</span>
+        <span *ngIf="venue?.errors?.['minlength']">Venue must be at least 3 characters</span>
+      </div>
+
+      <!-- Department -->
+      <ion-item class="form-item">
+        <ion-label position="stacked">Department *</ion-label>
+        <ion-select formControlName="department" placeholder="Select department">
+          <ion-select-option *ngFor="let dept of departments" [value]="dept">
+            {{ dept }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <div class="error-message" *ngIf="department?.invalid && department?.touched">
+        <span *ngIf="department?.errors?.['required']">Department is required</span>
+      </div>
+
+      <!-- Event Type (only if user can create university events) -->
+      <ion-item class="form-item" *ngIf="canCreateUniversityEvents()">
+        <ion-label position="stacked">Event Type *</ion-label>
+        <ion-segment formControlName="type">
+          <ion-segment-button value="departmental">
+            <ion-label>Departmental</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="university">
+            <ion-label>University</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-item>
+
+      <!-- Action Buttons -->
+      <div class="button-container">
+        <ion-button 
+          expand="block" 
+          type="submit" 
+          [disabled]="eventForm.invalid || isSubmitting"
+          color="primary">
+          <ion-icon name="checkmark-outline" slot="start"></ion-icon>
+          {{ mode === 'create' ? 'Create Event' : 'Update Event' }}
+        </ion-button>
+        
+        <ion-button 
+          expand="block" 
+          fill="outline" 
+          color="medium" 
+          (click)="dismiss()"
+          [disabled]="isSubmitting">
+          <ion-icon name="close-outline" slot="start"></ion-icon>
+          Cancel
+        </ion-button>
+      </div>
+    </div>
+  </form>
+</ion-content>

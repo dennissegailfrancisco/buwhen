@@ -1,0 +1,63 @@
+.form-container {
+  padding: 20px;
+}
+
+.form-item {
+  margin-bottom: 16px;
+  border-radius: 8px;
+  --background: var(--ion-color-light);
+  
+  ion-label {
+    font-weight: 500;
+    color: var(--ion-color-dark);
+  }
+  
+  ion-input, ion-textarea, ion-select {
+    margin-top: 8px;
+  }
+}
+
+.error-message {
+  margin: 4px 16px 8px 16px;
+  color: var(--ion-color-danger);
+  font-size: 12px;
+  
+  span {
+    display: block;
+  }
+}
+
+.button-container {
+  margin-top: 32px;
+  padding: 0 16px;
+  
+  ion-button {
+    margin-bottom: 12px;
+    height: 48px;
+    font-weight: 500;
+    
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+}
+
+ion-datetime-button {
+  width: 100%;
+  justify-content: flex-start;
+}
+
+ion-segment {
+  margin-top: 8px;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .form-container {
+    padding: 16px;
+  }
+  
+  .button-container {
+    padding: 0;
+  }
+}

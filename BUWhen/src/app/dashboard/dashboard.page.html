@@ -1,0 +1,149 @@
+<ion-header [translucent]="true">
+  <ion-toolbar class="custom-header">
+    <ion-buttons slot="start">
+      <ion-button fill="clear" (click)="logout()">
+        <ion-icon name="menu-outline" color="dark"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title class="header-title">DASHBOARD</ion-title>
+    <ion-buttons slot="end" *ngIf="canCreateEvents()">
+      <ion-button fill="clear" (click)="openCreateEventModal()">
+        <ion-icon name="add" color="primary"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="dashboard-content">
+  <!-- List View -->
+  <div *ngIf="currentView === 'list'" class="list-view">
+    <!-- BU-lletin Board Section -->
+    <div class="bulletin-section">
+      <h2 class="section-title">The BU-lletin Board</h2>
+      <ion-card class="bulletin-card">
+        <ion-card-content>
+          <div class="bulletin-item">
+            <span class="bulletin-label">--- EVENT Cover ---</span>
+            <ion-icon name="chevron-forward-outline" class="bulletin-arrow"></ion-icon>
+          </div>
+        </ion-card-content>
+      </ion-card>
+    </div>
+
+    <!-- More Upcoming Events Section -->
+    <div class="upcoming-section">
+      <div class="section-header">
+        <h2 class="section-title">More Upcoming Events</h2>
+        <div class="filter-controls">
+          <!-- Search -->
+          <ion-searchbar 
+            placeholder="Search"
+            class="custom-searchbar"
+            debounce="300"
+            [(ngModel)]="searchTerm"
+            (ionInput)="onSearchChange($event)">
+          </ion-searchbar>
+          <!-- Department Filter Dropdown -->
+          <ion-select 
+            class="filter-button"
+            [(ngModel)]="selectedDepartment"
+            (ionChange)="onDepartmentChange($event)"
+            interface="popover"
+            placeholder="All Departments">
+            <ion-select-option value="all">All Departments</ion-select-option>
+            <ion-select-option *ngFor="let dept of departments" [value]="dept">{{ dept }}</ion-select-option>
+          </ion-select>
+        </div>
+      </div>
+
+      <!-- Events List -->
+      <div class="events-list">
+        <ion-card 
+          *ngFor="let event of filteredEvents.slice(0, 6)" 
+          class="event-item-card"
+          (click)="showEventOptions(event)">
+          <ion-card-content>
+            <div class="event-item">
+              <div class="event-icon">
+                <ion-icon name="calendar-outline"></ion-icon>
+              </div>
+              <div class="event-details">
+                <h3 class="event-title">{{ event.title }}</h3>
+                <p class="event-meta">{{ event.date | date:'MMM dd, yyyy' }} • {{ event.time }}</p>
+                <p class="event-venue">{{ event.venue }}</p>
+              </div>
+              <div class="event-actions">
+                <span class="more-text">More</span>
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+              </div>
+            </div>
+          </ion-card-content>
+        </ion-card>
+
+        <!-- No events message -->
+        <div *ngIf="filteredEvents.length === 0" class="no-events">
+          <ion-icon name="calendar-outline" size="large"></ion-icon>
+          <h3>No events found</h3>
+          <p>There are no events matching your current filters.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Calendar View -->
+  <div *ngIf="currentView === 'calendar'" class="calendar-view">
+    <div class="calendar-header">
+      <h2 class="section-title">Events Timeline</h2>
+      
+      <!-- Department Filter for Calendar -->
+      <ion-segment 
+        [(ngModel)]="selectedSegment" 
+        (ionChange)="onSegmentChange($event)"
+        color="primary"
+        class="calendar-segment">
+        <ion-segment-button value="all">
+          <ion-label>All</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="university">
+          <ion-label>University</ion-label>
+        </ion-segment-button>
+        <ion-segment-button value="departmental">
+          <ion-label>Departmental</ion-label>
+        </ion-segment-button>
+      </ion-segment>
+    </div>
+
+    <!-- FullCalendar Component -->
+    <div class="calendar-container">
+      <full-calendar [options]="calendarOptions"></full-calendar>
+    </div>
+  </div>
+</ion-content>
+
+
+<!-- Custom Bottom Navigation -->
+<div class="custom-bottom-nav">
+  <button (click)="switchToListView()" [class.active]="currentView === 'list'">
+    <ion-icon name="list-outline"></ion-icon>
+    <span>Events</span>
+  </button>
+  <button (click)="switchToCalendarView()" [class.active]="currentView === 'calendar'">
+    <ion-icon name="calendar-outline"></ion-icon>
+    <span>Calendar</span>
+  </button>
+  <button disabled>
+    <ion-icon name="clipboard-outline"></ion-icon>
+    <span>Tasks</span>
+  </button>
+  <button disabled>
+    <ion-icon name="notifications-outline"></ion-icon>
+    <span>Alerts</span>
+  </button>
+</div>
+
+<!-- Floating Action Button -->
+<ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="canCreateEvents()" class="fab-create">
+  <ion-fab-button color="primary" (click)="openCreateEventModal()">
+    <ion-icon name="add"></ion-icon>
+  </ion-fab-button>
+</ion-fab>
