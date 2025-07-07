@@ -39,14 +39,20 @@
           <ion-searchbar 
             placeholder="Search"
             class="custom-searchbar"
-            debounce="300">
+            debounce="300"
+            [(ngModel)]="searchTerm"
+            (ionInput)="onSearchChange($event)">
           </ion-searchbar>
-          
-          <!-- Department Filter -->
-          <ion-button fill="outline" size="small" class="filter-button">
-            <ion-icon name="filter-outline" slot="start"></ion-icon>
-            Filter
-          </ion-button>
+          <!-- Department Filter Dropdown -->
+          <ion-select 
+            class="filter-button"
+            [(ngModel)]="selectedDepartment"
+            (ionChange)="onDepartmentChange($event)"
+            interface="popover"
+            placeholder="All Departments">
+            <ion-select-option value="all">All Departments</ion-select-option>
+            <ion-select-option *ngFor="let dept of departments" [value]="dept">{{ dept }}</ion-select-option>
+          </ion-select>
         </div>
       </div>
 
@@ -114,34 +120,26 @@
   </div>
 </ion-content>
 
-<!-- Bottom Navigation -->
-<ion-tabs class="bottom-navigation">
-  <ion-tab-bar slot="bottom" class="custom-tab-bar">
-    <ion-tab-button 
-      (click)="switchToListView()" 
-      [class.active]="currentView === 'list'">
-      <ion-icon name="list-outline"></ion-icon>
-      <ion-label>Events</ion-label>
-    </ion-tab-button>
-    
-    <ion-tab-button 
-      (click)="switchToCalendarView()" 
-      [class.active]="currentView === 'calendar'">
-      <ion-icon name="calendar-outline"></ion-icon>
-      <ion-label>Calendar</ion-label>
-    </ion-tab-button>
-    
-    <ion-tab-button>
-      <ion-icon name="clipboard-outline"></ion-icon>
-      <ion-label>Tasks</ion-label>
-    </ion-tab-button>
-    
-    <ion-tab-button>
-      <ion-icon name="notifications-outline"></ion-icon>
-      <ion-label>Alerts</ion-label>
-    </ion-tab-button>
-  </ion-tab-bar>
-</ion-tabs>
+
+<!-- Custom Bottom Navigation -->
+<div class="custom-bottom-nav">
+  <button (click)="switchToListView()" [class.active]="currentView === 'list'">
+    <ion-icon name="list-outline"></ion-icon>
+    <span>Events</span>
+  </button>
+  <button (click)="switchToCalendarView()" [class.active]="currentView === 'calendar'">
+    <ion-icon name="calendar-outline"></ion-icon>
+    <span>Calendar</span>
+  </button>
+  <button disabled>
+    <ion-icon name="clipboard-outline"></ion-icon>
+    <span>Tasks</span>
+  </button>
+  <button disabled>
+    <ion-icon name="notifications-outline"></ion-icon>
+    <span>Alerts</span>
+  </button>
+</div>
 
 <!-- Floating Action Button -->
 <ion-fab vertical="bottom" horizontal="end" slot="fixed" *ngIf="canCreateEvents()" class="fab-create">

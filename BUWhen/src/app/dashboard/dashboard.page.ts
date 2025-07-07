@@ -23,8 +23,8 @@ export class DashboardPage implements OnInit {
   filteredEvents: Event[] = [];
   selectedSegment: string = 'all';
   selectedDepartment: Department | 'all' = 'all';
+  searchTerm: string = '';
   currentView: 'list' | 'calendar' = 'list';
-  
   departments = Object.values(Department);
 
   // Calendar configuration
@@ -74,12 +74,20 @@ export class DashboardPage implements OnInit {
 
   onSegmentChange(event: any) {
     this.selectedSegment = event.detail.value;
-    this.events$.subscribe(events => {
-      this.filterEvents(events);
-    });
+    this.applyFilters();
   }
 
-  onDepartmentFilter() {
+  onDepartmentChange(event: any) {
+    this.selectedDepartment = event.detail.value;
+    this.applyFilters();
+  }
+
+  onSearchChange(event: any) {
+    this.searchTerm = event.detail.value;
+    this.applyFilters();
+  }
+
+  applyFilters() {
     this.events$.subscribe(events => {
       this.filterEvents(events);
     });
@@ -247,27 +255,7 @@ export class DashboardPage implements OnInit {
   }
 
   // Calendar methods
-  updateCalendarEvents() {
-    const calendarEvents: EventInput[] = this.filteredEvents.map(event => ({
-      id: event.id,
-      title: event.title,
-      start: `${event.date}T${event.time}`,
-      extendedProps: {
-        description: event.description,
-        venue: event.venue,
-        department: event.department,
-        type: event.type,
-        originalEvent: event
-      },
-      backgroundColor: this.getCalendarEventColor(event.department, event.type),
-      borderColor: this.getCalendarEventColor(event.department, event.type)
-    }));
-
-    this.calendarOptions = {
-      ...this.calendarOptions,
-      events: calendarEvents
-    };
-  }
+  // (Removed duplicate, now handled above with time formatting)
 
   handleEventClick(info: any) {
     const originalEvent = info.event.extendedProps.originalEvent;
@@ -308,11 +296,51 @@ export class DashboardPage implements OnInit {
       filtered = filtered.filter(event => event.department === this.selectedDepartment);
     }
 
+    // Filter by search term (title, venue, description)
+    if (this.searchTerm && this.searchTerm.trim() !== '') {
+      const term = this.searchTerm.trim().toLowerCase();
+      filtered = filtered.filter(event =>
+        event.title.toLowerCase().includes(term) ||
+        event.venue.toLowerCase().includes(term) ||
+        event.description.toLowerCase().includes(term)
+      );
+    }
+
     this.filteredEvents = filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    
     // Update calendar if in calendar view
     if (this.currentView === 'calendar') {
       this.updateCalendarEvents();
     }
+  }
+
+  // Ensure time is in HH:mm:ss for FullCalendar
+  formatTime(time: string): string {
+    if (!time) return '00:00:00';
+    if (/^\d{2}:\d{2}:\d{2}$/.test(time)) return time;
+    if (/^\d{2}:\d{2}$/.test(time)) return time + ':00';
+    return '00:00:00';
+  }
+
+  // Update updateCalendarEvents to use formatTime
+  updateCalendarEvents() {
+    const calendarEvents: EventInput[] = this.filteredEvents.map(event => ({
+      id: event.id,
+      title: event.title,
+      start: `${event.date}T${this.formatTime(event.time)}`,
+      extendedProps: {
+        description: event.description,
+        venue: event.venue,
+        department: event.department,
+        type: event.type,
+        originalEvent: event
+      },
+      backgroundColor: this.getCalendarEventColor(event.department, event.type),
+      borderColor: this.getCalendarEventColor(event.department, event.type)
+    }));
+
+    this.calendarOptions = {
+      ...this.calendarOptions,
+      events: calendarEvents
+    };
   }
 }
