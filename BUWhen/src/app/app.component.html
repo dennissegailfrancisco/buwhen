@@ -1,3 +1,58 @@
 <ion-app>
-  <ion-router-outlet></ion-router-outlet>
+  <ion-menu side="start" contentId="main">
+    <ion-content>
+      <ion-list>
+        <ion-item button routerLink="/dashboard">
+          <ion-icon name="calendar-outline" slot="start"></ion-icon>
+          <ion-label>University Events</ion-label>
+        </ion-item>
+        
+        <ion-list-header>
+          <ion-label>Department Events</ion-label>
+        </ion-list-header>
+        
+        <ion-item button [routerLink]="['/department-events']" [queryParams]="{department: 'CITE'}">
+          <ion-icon name="desktop-outline" slot="start"></ion-icon>
+          <ion-label>CITE</ion-label>
+        </ion-item>
+        
+        <ion-item button [routerLink]="['/department-events']" [queryParams]="{department: 'CHMT'}">
+          <ion-icon name="medical-outline" slot="start"></ion-icon>
+          <ion-label>CHMT</ion-label>
+        </ion-item>
+        
+        <ion-item button [routerLink]="['/department-events']" [queryParams]="{department: 'CBA'}">
+          <ion-icon name="business-outline" slot="start"></ion-icon>
+          <ion-label>CBA</ion-label>
+        </ion-item>
+        
+        <ion-item button [routerLink]="['/department-events']" [queryParams]="{department: 'CAS'}">
+          <ion-icon name="library-outline" slot="start"></ion-icon>
+          <ion-label>CAS</ion-label>
+        </ion-item>
+        
+        <ion-item button [routerLink]="['/department-events']" [queryParams]="{department: 'COE'}">
+          <ion-icon name="school-outline" slot="start"></ion-icon>
+          <ion-label>COE</ion-label>
+        </ion-item>
+        
+        <ion-item button [routerLink]="['/department-events']" [queryParams]="{department: 'Nursing'}">
+          <ion-icon name="heart-outline" slot="start"></ion-icon>
+          <ion-label>Nursing</ion-label>
+        </ion-item>
+        
+        <ion-item button [routerLink]="['/department-events']" [queryParams]="{department: 'Education'}">
+          <ion-icon name="book-outline" slot="start"></ion-icon>
+          <ion-label>Education</ion-label>
+        </ion-item>
+        
+        <ion-item button (click)="logout()" color="danger">
+          <ion-icon name="log-out-outline" slot="start"></ion-icon>
+          <ion-label>Log Out</ion-label>
+        </ion-item>
+      </ion-list>
+    </ion-content>
+  </ion-menu>
+
+  <ion-router-outlet id="main"></ion-router-outlet>
 </ion-app>

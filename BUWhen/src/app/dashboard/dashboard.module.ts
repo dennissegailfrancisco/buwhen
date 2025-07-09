@@ -8,6 +8,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 import { DashboardPageRoutingModule } from './dashboard-routing.module';
 import { DashboardPage } from './dashboard.page';
 import { EventModalComponent } from '../components/event-modal/event-modal.component';
+import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
   imports: [
@@ -16,11 +17,11 @@ import { EventModalComponent } from '../components/event-modal/event-modal.compo
     ReactiveFormsModule,
     IonicModule,
     FullCalendarModule,
-    DashboardPageRoutingModule
+    DashboardPageRoutingModule,
+      SharedModule,
   ],
   declarations: [
-    DashboardPage,
-    EventModalComponent
+    DashboardPage
   ]
 })
 export class DashboardPageModule {}

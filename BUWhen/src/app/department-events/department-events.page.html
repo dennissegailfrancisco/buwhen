@@ -1,0 +1,40 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-menu-button></ion-menu-button>
+    </ion-buttons>
+    <ion-title>{{ departmentName }} Events</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-searchbar placeholder="Search"></ion-searchbar>
+  <ion-button fill="outline" slot="end">
+    <ion-icon name="filter-outline"></ion-icon>
+  </ion-button>
+
+  <ion-list>
+    <ion-item *ngFor="let event of events">
+      <ion-thumbnail slot="start">
+        <img [src]="event.image || 'assets/default-event.png'" />
+      </ion-thumbnail>
+      <ion-label>
+        <h2>{{ event.title }}</h2>
+        <p>{{ event.date }} & {{ event.time }}</p>
+        <p>{{ event.venue }}</p>
+      </ion-label>
+      <ion-button fill="clear" color="primary" (click)="openEventModal(event)">
+        Modify
+      </ion-button>
+      <ion-button fill="clear" color="danger" (click)="deleteEvent(event.id)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-button>
+    </ion-item>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button color="success"(click)="openEventModal()">
+      <ion-icon name="add-outline"></ion-icon>
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>

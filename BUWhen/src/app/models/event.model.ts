@@ -6,9 +6,10 @@ export interface Event {
   time: string;
   venue: string;
   department: Department;
-  type: 'university' | 'departmental';
+  type: string;
   createdAt: Date;
   updatedAt: Date;
+  image?: string; 
 }
 
 export enum Department {

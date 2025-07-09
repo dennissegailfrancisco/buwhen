@@ -121,6 +121,7 @@ ion-fab-button {
   border-top: 1px solid #e8e6db;
   height: 64px;
   box-shadow: 0 -2px 8px rgba(0,0,0,0.04);
+  
 
   button {
     background: none;
@@ -131,7 +132,7 @@ ion-fab-button {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    color: #7f8c8d;
+    color: #0A400C !important;
     font-size: 12px;
     padding: 6px 0 0 0;
     transition: color 0.2s;
@@ -157,8 +158,9 @@ ion-fab-button {
 }
 
 .dashboard-content {
-  padding-bottom: 80px !important; // space for nav
-}
+  padding-bottom: 80px !important; 
+  --background: #e8e6db !important;  
+  }
 
 // Responsive adjustments
 @media (max-width: 768px) {

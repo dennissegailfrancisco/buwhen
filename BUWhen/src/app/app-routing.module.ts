@@ -21,6 +21,12 @@ const routes: Routes = [
     loadChildren: () => import('./dashboard/dashboard.module').then( m => m.DashboardPageModule),
     canActivate: [AuthGuard]
   },
+{
+    path: 'department-events',
+    loadChildren: () => import('./department-events/department-events.module').then(m => m.DepartmentEventsPageModule)
+  },
+
+
 ];
 
 @NgModule({
