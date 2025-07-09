@@ -1,9 +1,7 @@
 <ion-header [translucent]="true">
   <ion-toolbar class="custom-header">
     <ion-buttons slot="start">
-      <ion-button fill="clear" (click)="logout()">
-        <ion-icon name="menu-outline" color="dark"></ion-icon>
-      </ion-button>
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
     <ion-title class="header-title">DASHBOARD</ion-title>
     <ion-buttons slot="end" *ngIf="canCreateEvents()">
@@ -15,9 +13,7 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="dashboard-content">
-  <!-- List View -->
   <div *ngIf="currentView === 'list'" class="list-view">
-    <!-- BU-lletin Board Section -->
     <div class="bulletin-section">
       <h2 class="section-title">The BU-lletin Board</h2>
       <ion-card class="bulletin-card">
@@ -51,7 +47,7 @@
             interface="popover"
             placeholder="All Departments">
             <ion-select-option value="all">All Departments</ion-select-option>
-            <ion-select-option *ngFor="let dept of departments" [value]="dept">{{ dept }}</ion-select-option>
+      
           </ion-select>
         </div>
       </div>
@@ -130,14 +126,6 @@
   <button (click)="switchToCalendarView()" [class.active]="currentView === 'calendar'">
     <ion-icon name="calendar-outline"></ion-icon>
     <span>Calendar</span>
-  </button>
-  <button disabled>
-    <ion-icon name="clipboard-outline"></ion-icon>
-    <span>Tasks</span>
-  </button>
-  <button disabled>
-    <ion-icon name="notifications-outline"></ion-icon>
-    <span>Alerts</span>
   </button>
 </div>
 
