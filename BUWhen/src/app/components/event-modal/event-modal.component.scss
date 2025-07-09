@@ -51,6 +51,26 @@ ion-segment {
   margin-top: 8px;
 }
 
+.time-picker {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 8px;
+  
+  ion-select {
+    flex: 1;
+    --placeholder-color: var(--ion-color-medium);
+    
+    &:first-child, &:nth-child(2) {
+      max-width: 80px;
+    }
+    
+    &:last-child {
+      max-width: 100px;
+    }
+  }
+}
+
 // Responsive adjustments
 @media (max-width: 768px) {
   .form-container {

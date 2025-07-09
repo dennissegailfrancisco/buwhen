@@ -19,8 +19,8 @@ export class EventModalComponent implements OnInit {
   isSubmitting = false;
   departments = Object.values(Department);
   today = new Date().toISOString().split('T')[0];
-hours: string[] = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
-minutes: string[] = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
+  hourOptions: string[] = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
+  minuteOptions: string[] = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
   constructor(
     private formBuilder: FormBuilder,
     private modalController: ModalController,
@@ -60,11 +60,27 @@ private createForm() {
 
   private populateForm() {
     if (this.event) {
+      // Parse the time field if it exists
+      let hours = '';
+      let minutes = '';
+      let ampm = '';
+      
+      if (this.event.time) {
+        const timeMatch = this.event.time.match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+        if (timeMatch) {
+          hours = timeMatch[1].padStart(2, '0');
+          minutes = timeMatch[2];
+          ampm = timeMatch[3].toUpperCase();
+        }
+      }
+
       this.eventForm.patchValue({
         title: this.event.title,
         description: this.event.description,
         date: this.event.date,
-        time: this.event.time,
+        hours: hours,
+        minutes: minutes,
+        ampm: ampm,
         venue: this.event.venue,
         department: this.event.department,
         type: this.event.type
@@ -86,7 +102,7 @@ private createForm() {
         title: formValue.title,
         description: formValue.description,
         date: formValue.date,
-        time: formValue.time ? `${formValue.hours}:${formValue.minutes} ${formValue.ampm}` : '',
+        time: `${formValue.hours}:${formValue.minutes} ${formValue.ampm}`,
         venue: formValue.venue,
         department: formValue.department,
         type: formValue.type
@@ -158,7 +174,9 @@ private createForm() {
   get title() { return this.eventForm.get('title'); }
   get description() { return this.eventForm.get('description'); }
   get date() { return this.eventForm.get('date'); }
-  get time() { return this.eventForm.get('time'); }
+  get hours() { return this.eventForm.get('hours'); }
+  get minutes() { return this.eventForm.get('minutes'); }
+  get ampm() { return this.eventForm.get('ampm'); }
   get venue() { return this.eventForm.get('venue'); }
   get department() { return this.eventForm.get('department'); }
   get type() { return this.eventForm.get('type'); }

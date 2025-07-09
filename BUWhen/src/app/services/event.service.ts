@@ -15,7 +15,7 @@ export class EventService {
       title: 'University Foundation Day',
       description: 'Celebrating the founding of Baliuag University',
       date: '2025-08-15',
-      time: '08:00',
+      time: '08:00 AM',
       venue: 'University Gymnasium',
       department: Department.UNIVERSITY,
       type: 'university',
@@ -27,7 +27,7 @@ export class EventService {
       title: 'CITE Programming Contest',
       description: 'Annual programming competition for CITE students',
       date: '2025-09-20',
-      time: '09:00',
+      time: '09:00 AM',
       venue: 'CITE Computer Laboratory',
       department: Department.CITE,
       type: 'departmental',
@@ -39,7 +39,7 @@ export class EventService {
       title: 'Nursing Week Celebration',
       description: 'Week-long celebration for nursing students and faculty',
       date: '2025-10-12',
-      time: '07:30',
+      time: '07:30 AM',
       venue: 'Nursing Building',
       department: Department.NURSING,
       type: 'departmental',
@@ -51,7 +51,7 @@ export class EventService {
       title: 'Business Summit 2025',
       description: 'Annual business summit with industry leaders',
       date: '2025-11-05',
-      time: '13:00',
+      time: '01:00 PM',
       venue: 'CBA Conference Hall',
       department: Department.CBA,
       type: 'departmental',
@@ -80,9 +80,15 @@ export class EventService {
   }
 
   createEvent(eventData: CreateEventDto): Observable<Event> {
+    // Log the incoming data from the modal
+    console.log('Creating event with data from modal:', eventData);
+    
+    // Validate the data format
+    const validatedData = this.validateEventData(eventData);
+    
     const newEvent: Event = {
       id: this.generateId(),
-      ...eventData,
+      ...validatedData,
       createdAt: new Date(),
       updatedAt: new Date()
     };
@@ -91,20 +97,31 @@ export class EventService {
     const updatedEvents = [...currentEvents, newEvent];
     this.eventsSubject.next(updatedEvents);
 
+    console.log('Event created successfully:', newEvent);
+
     return new BehaviorSubject(newEvent).asObservable();
   }
 
   updateEvent(id: string, eventData: Partial<CreateEventDto>): Observable<Event | null> {
+    // Log the incoming update data from the modal
+    console.log('Updating event with data from modal:', { id, eventData });
+    
     const currentEvents = this.eventsSubject.value;
     const eventIndex = currentEvents.findIndex(event => event.id === id);
 
     if (eventIndex === -1) {
+      console.warn('Event not found for update:', id);
       return new BehaviorSubject(null).asObservable();
     }
 
+    // Validate data if it's a complete update
+    const validatedData = eventData.title && eventData.description && eventData.date && eventData.time && eventData.venue && eventData.department && eventData.type
+      ? this.validateEventData(eventData as CreateEventDto)
+      : eventData;
+
     const updatedEvent: Event = {
       ...currentEvents[eventIndex],
-      ...eventData,
+      ...validatedData,
       updatedAt: new Date()
     };
 
@@ -112,18 +129,25 @@ export class EventService {
     updatedEvents[eventIndex] = updatedEvent;
     this.eventsSubject.next(updatedEvents);
 
+    console.log('Event updated successfully:', updatedEvent);
+
     return new BehaviorSubject(updatedEvent).asObservable();
   }
 
   deleteEvent(id: string): Observable<boolean> {
+    console.log('Deleting event:', id);
+    
     const currentEvents = this.eventsSubject.value;
     const filteredEvents = currentEvents.filter(event => event.id !== id);
     
     if (filteredEvents.length === currentEvents.length) {
+      console.warn('Event not found for deletion:', id);
       return new BehaviorSubject(false).asObservable();
     }
 
     this.eventsSubject.next(filteredEvents);
+    console.log('Event deleted successfully:', id);
+    
     return new BehaviorSubject(true).asObservable();
   }
 
@@ -139,6 +163,80 @@ export class EventService {
       event => event.type === 'departmental'
     );
     return new BehaviorSubject(departmentalEvents).asObservable();
+  }
+
+  // Method to get all events for debugging
+  getCurrentEventsArray(): Event[] {
+    return this.eventsSubject.value;
+  }
+
+  // Method to get events count
+  getEventsCount(): number {
+    return this.eventsSubject.value.length;
+  }
+
+  // Method to format event data for display
+  formatEventForDisplay(event: Event): any {
+    return {
+      ...event,
+      formattedDate: this.formatDate(event.date),
+      formattedTime: event.time, // Already in display format from modal
+      formattedDateTime: `${this.formatDate(event.date)} at ${event.time}`
+    };
+  }
+
+  // Helper method to format date
+  private formatDate(dateString: string): string {
+    try {
+      const date = new Date(dateString + 'T00:00:00'); // Add time to avoid timezone issues
+      return date.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
+    } catch (error) {
+      console.warn('Error formatting date:', dateString);
+      return dateString;
+    }
+  }
+
+  // Validate event data from modal component
+  private validateEventData(eventData: CreateEventDto): CreateEventDto {
+    const validated = { ...eventData };
+
+    // Validate time format (should be HH:MM AM/PM from modal)
+    if (validated.time) {
+      const timePattern = /^(0?[1-9]|1[0-2]):[0-5][0-9]\s*(AM|PM)$/i;
+      if (!timePattern.test(validated.time.trim())) {
+        console.warn('Invalid time format received from modal:', validated.time);
+        validated.time = '12:00 PM'; // Fallback
+      } else {
+        // Normalize the format
+        const timeParts = validated.time.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
+        if (timeParts) {
+          const hours = timeParts[1].padStart(2, '0');
+          const minutes = timeParts[2];
+          const ampm = timeParts[3].toUpperCase();
+          validated.time = `${hours}:${minutes} ${ampm}`;
+        }
+      }
+    }
+
+    // Validate date format
+    if (validated.date) {
+      const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+      if (!datePattern.test(validated.date)) {
+        console.warn('Invalid date format received from modal:', validated.date);
+        validated.date = new Date().toISOString().split('T')[0]; // Today as fallback
+      }
+    }
+
+    // Trim string fields
+    validated.title = validated.title?.trim() || '';
+    validated.description = validated.description?.trim() || '';
+    validated.venue = validated.venue?.trim() || '';
+
+    return validated;
   }
 
   private generateId(): string {
