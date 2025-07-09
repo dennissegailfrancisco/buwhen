@@ -7,6 +7,7 @@ import { FullCalendarModule } from '@fullcalendar/angular';
 
 import { DashboardPageRoutingModule } from './dashboard-routing.module';
 import { DashboardPage } from './dashboard.page';
+import { EventModalComponent } from '../components/event-modal/event-modal.component';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
@@ -17,7 +18,7 @@ import { SharedModule } from '../shared/shared.module';
     IonicModule,
     FullCalendarModule,
     DashboardPageRoutingModule,
-    SharedModule
+      SharedModule,
   ],
   declarations: [
     DashboardPage

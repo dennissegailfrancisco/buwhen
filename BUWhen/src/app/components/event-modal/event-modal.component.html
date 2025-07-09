@@ -42,46 +42,47 @@
       </div>
 
       <!-- Date and Time Row -->
-      <ion-row>
-        <ion-col size="6">
-          <ion-item class="form-item">
-            <ion-label position="stacked">Date *</ion-label>
-            <ion-datetime-button datetime="date-picker"></ion-datetime-button>
-          </ion-item>
-          <ion-modal [keepContentsMounted]="true">
-            <ng-template>
-              <ion-datetime 
-                id="date-picker"
-                presentation="date"
-                [min]="today"
-                formControlName="date">
-              </ion-datetime>
-            </ng-template>
-          </ion-modal>
-          <div class="error-message" *ngIf="date?.invalid && date?.touched">
-            <span *ngIf="date?.errors?.['required']">Date is required</span>
-          </div>
-        </ion-col>
-        
-        <ion-col size="6">
-          <ion-item class="form-item">
-            <ion-label position="stacked">Time *</ion-label>
-            <ion-datetime-button datetime="time-picker"></ion-datetime-button>
-          </ion-item>
-          <ion-modal [keepContentsMounted]="true">
-            <ng-template>
-              <ion-datetime 
-                id="time-picker"
-                presentation="time"
-                formControlName="time">
-              </ion-datetime>
-            </ng-template>
-          </ion-modal>
-          <div class="error-message" *ngIf="time?.invalid && time?.touched">
-            <span *ngIf="time?.errors?.['required']">Time is required</span>
-          </div>
-        </ion-col>
-      </ion-row>
+<ion-item class="form-item">
+  <ion-label position="stacked">Date *</ion-label>
+  <ion-datetime
+    formControlName="date"
+    presentation="date"
+    [min]="today"
+    placeholder="Select a date">
+  </ion-datetime>
+</ion-item>
+<div class="error-message" *ngIf="date?.invalid && date?.touched">
+  <span *ngIf="date?.errors?.['required']">Date is required</span>
+</div>
+
+<!-- Time Input -->
+<ion-item class="form-item">
+  <ion-label position="stacked">Time *</ion-label>
+  <div class="time-picker">
+    <!-- Hours Dropdown -->
+    <ion-select formControlName="hours" placeholder="HH">
+      <ion-select-option *ngFor="let hour of hours" [value]="hour">
+        {{ hour }}
+      </ion-select-option>
+    </ion-select>
+
+    <!-- Minutes Dropdown -->
+    <ion-select formControlName="minutes" placeholder="MM">
+      <ion-select-option *ngFor="let minute of minutes" [value]="minute">
+        {{ minute }}
+      </ion-select-option>
+    </ion-select>
+
+    <!-- AM/PM Dropdown -->
+    <ion-select formControlName="ampm" placeholder="AM/PM">
+      <ion-select-option value="AM">AM</ion-select-option>
+      <ion-select-option value="PM">PM</ion-select-option>
+    </ion-select>
+  </div>
+</ion-item>
+<div class="error-message" *ngIf="time?.invalid && time?.touched">
+  <span *ngIf="time?.errors?.['required']">Time is required</span>
+</div>
 
       <!-- Venue -->
       <ion-item class="form-item">

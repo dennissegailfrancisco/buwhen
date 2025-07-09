@@ -19,7 +19,8 @@ export class EventModalComponent implements OnInit {
   isSubmitting = false;
   departments = Object.values(Department);
   today = new Date().toISOString().split('T')[0];
-
+hours: string[] = Array.from({ length: 12 }, (_, i) => (i + 1).toString().padStart(2, '0'));
+minutes: string[] = Array.from({ length: 60 }, (_, i) => i.toString().padStart(2, '0'));
   constructor(
     private formBuilder: FormBuilder,
     private modalController: ModalController,
@@ -36,16 +37,19 @@ export class EventModalComponent implements OnInit {
     }
   }
 
-  private createForm() {
-    this.eventForm = this.formBuilder.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
-      date: ['', Validators.required],
-      time: ['', Validators.required],
-      venue: ['', [Validators.required, Validators.minLength(3)]],
-      department: [Department.CITE, Validators.required],
-      type: ['departmental', Validators.required]
-    });
+private createForm() {
+  this.eventForm = this.formBuilder.group({
+    title: ['', [Validators.required, Validators.minLength(3)]],
+    description: ['', [Validators.required, Validators.minLength(10)]],
+    date: ['', Validators.required],
+    hours: ['', Validators.required], // Hours dropdown
+    minutes: ['', Validators.required], // Minutes dropdown
+    ampm: ['', Validators.required], // AM/PM dropdown
+    venue: ['', [Validators.required, Validators.minLength(3)]],
+    department: [Department.CITE, Validators.required],
+    type: ['departmental', Validators.required]
+  });
+
 
     // If user can create university events, enable the type selection
     if (!this.authService.canCreateUniversityEvents()) {
@@ -82,7 +86,7 @@ export class EventModalComponent implements OnInit {
         title: formValue.title,
         description: formValue.description,
         date: formValue.date,
-        time: formValue.time,
+        time: formValue.time ? `${formValue.hours}:${formValue.minutes} ${formValue.ampm}` : '',
         venue: formValue.venue,
         department: formValue.department,
         type: formValue.type
