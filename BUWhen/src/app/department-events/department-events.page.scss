@@ -7,12 +7,131 @@ ion-toolbar {
   --color: #ffffff;
 }
 
-ion-item {
+.search-filter-container {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 8px;
+  
+  ion-searchbar {
+    flex: 1;
+  }
+}
+
+.event-item {
   --background: #a5b89c;
   --color: #ffffff;
   margin-bottom: 10px;
+  border-radius: 12px;
+  margin: 8px 16px;
+  
+  ion-label {
+    padding: 12px 0;
+    
+    h2 {
+      font-weight: 600;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+    
+    p {
+      margin: 4px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 14px;
+      
+      ion-icon {
+        font-size: 16px;
+        opacity: 0.8;
+      }
+      
+      &.event-datetime {
+        color: #e8f5e8;
+        font-weight: 500;
+      }
+      
+      &.event-venue {
+        color: #d4e6d4;
+      }
+      
+      &.event-description {
+        color: #c0d4c0;
+        font-size: 13px;
+        margin-top: 6px;
+        max-width: 250px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+    }
+  }
+  
+  ion-thumbnail {
+    --size: 60px;
+    --border-radius: 8px;
+    margin-right: 12px;
+    
+    img {
+      object-fit: cover;
+      border-radius: 8px;
+    }
+  }
+}
+
+.event-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  
+  ion-button {
+    --padding-start: 8px;
+    --padding-end: 8px;
+    
+    ion-icon {
+      font-size: 18px;
+    }
+  }
+}
+
+.no-events-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+  min-height: 50vh;
+  
+  .no-events-icon {
+    font-size: 64px;
+    color: #8c7b6b;
+    margin-bottom: 20px;
+    opacity: 0.6;
+  }
+  
+  h3 {
+    color: #8c7b6b;
+    margin-bottom: 12px;
+    font-weight: 600;
+  }
+  
+  p {
+    color: #666;
+    margin-bottom: 24px;
+    max-width: 280px;
+  }
+  
+  ion-button {
+    --background: #8c7b6b;
+  }
 }
 
 ion-fab-button {
   --background: #4caf50;
+  --color: white;
+  
+  &:hover {
+    --background: #45a049;
+  }
 }

@@ -1,35 +1,64 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EventService } from '../services/event.service';
 import { Event, Department } from '../models/event.model';
-import { ModalController } from '@ionic/angular';
-import { EventModalComponent } from '../components/event-modal/event-modal.component'; 
+import { ModalController, AlertController, LoadingController } from '@ionic/angular';
+import { EventModalComponent } from '../components/event-modal/event-modal.component';
+import { Subscription } from 'rxjs'; 
 @Component({
   selector: 'app-department-events',
   templateUrl: './department-events.page.html',
   styleUrls: ['./department-events.page.scss'],
   standalone: false,
 })
-export class DepartmentEventsPage implements OnInit {
+export class DepartmentEventsPage implements OnInit, OnDestroy {
   departmentName: string = '';
+  department: Department | null = null;
   events: Event[] = [];
+  private eventsSubscription?: Subscription;
 
-  constructor(private route: ActivatedRoute, private eventService: EventService,   private modalController: ModalController) {}
+  constructor(
+    private route: ActivatedRoute, 
+    private eventService: EventService,   
+    private modalController: ModalController,
+    private alertController: AlertController,
+    private loadingController: LoadingController
+  ) {}
 
   ngOnInit() {
     this.route.queryParams.subscribe(params => {
       this.departmentName = params['department'] || 'Unknown Department';
+      this.department = this.getDepartmentEnum(this.departmentName);
       this.loadEvents();
     });
   }
 
+  ngOnDestroy() {
+    if (this.eventsSubscription) {
+      this.eventsSubscription.unsubscribe();
+    }
+  }
+
   loadEvents() {
-    const department = this.getDepartmentEnum(this.departmentName);
-    if (department) {
-      this.eventService.getEventsByDepartment(department).subscribe(events => {
-        this.events = events;
+    if (this.department) {
+      // Unsubscribe from previous subscription
+      if (this.eventsSubscription) {
+        this.eventsSubscription.unsubscribe();
+      }
+
+      // Subscribe to events for this department
+      this.eventsSubscription = this.eventService.getEventsByDepartment(this.department).subscribe({
+        next: (events) => {
+          this.events = events;
+          console.log(`Loaded ${events.length} events for ${this.departmentName}:`, events);
+        },
+        error: (error) => {
+          console.error('Error loading events:', error);
+          this.events = [];
+        }
       });
     } else {
+      console.warn('Invalid department:', this.departmentName);
       this.events = [];
     }
   }
@@ -69,34 +98,96 @@ addEvent() {
     });
   }
 
-async openEventModal(event?: any) {
-  const modal = await this.modalController.create({
-    component: EventModalComponent,
-    componentProps: {
-      event: event || null, // Pass event data or null for a new event
-    },
-  });
+  async openEventModal(event?: Event) {
+    console.log('Opening event modal for:', event ? 'edit' : 'create', event);
+    
+    const modal = await this.modalController.create({
+      component: EventModalComponent,
+      componentProps: {
+        event: event || null,
+        mode: event ? 'edit' : 'create'
+      },
+    });
 
-
-  modal.onDidDismiss().then((result) => {
-    if (result.data) {
-      if (event) {
-        this.modifyEvent(result.data); // Update the event
+    modal.onDidDismiss().then(async (result) => {
+      if (result.data) {
+        console.log('Modal dismissed with data:', result.data);
+        
+        if (event) {
+          // Editing existing event - data comes from modal's update operation
+          this.loadEvents(); // Refresh the events list
+          await this.showSuccessAlert('Event updated successfully!');
+        } else {
+          // Creating new event - data comes from modal's create operation
+          this.loadEvents(); // Refresh the events list
+          await this.showSuccessAlert('Event created successfully!');
+        }
       } else {
-        this.addEvent(); // Add a new event
-      }
-    }
-  });
-
-  return await modal.present();
-}
-
-  deleteEvent(eventId: string) {
-    this.eventService.deleteEvent(eventId).subscribe(success => {
-      if (success) {
-        this.events = this.events.filter(event => event.id !== eventId);
+        console.log('Modal dismissed without data');
       }
     });
+
+    return await modal.present();
+  }
+
+  async deleteEvent(eventId: string) {
+    const alert = await this.alertController.create({
+      header: 'Confirm Delete',
+      message: 'Are you sure you want to delete this event?',
+      buttons: [
+        {
+          text: 'Cancel',
+          role: 'cancel',
+        },
+        {
+          text: 'Delete',
+          role: 'destructive',
+          handler: async () => {
+            const loading = await this.loadingController.create({
+              message: 'Deleting event...',
+            });
+            await loading.present();
+
+            this.eventService.deleteEvent(eventId).subscribe({
+              next: async (success) => {
+                await loading.dismiss();
+                if (success) {
+                  this.loadEvents(); // Refresh the events list
+                  await this.showSuccessAlert('Event deleted successfully!');
+                } else {
+                  await this.showErrorAlert('Failed to delete event');
+                }
+              },
+              error: async (error) => {
+                await loading.dismiss();
+                console.error('Error deleting event:', error);
+                await this.showErrorAlert('Error occurred while deleting event');
+              }
+            });
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
+  private async showSuccessAlert(message: string) {
+    const alert = await this.alertController.create({
+      header: 'Success',
+      message,
+      buttons: ['OK']
+    });
+    await alert.present();
+  }
+
+  private async showErrorAlert(message: string) {
+    const alert = await this.alertController.create({
+      header: 'Error',
+      message,
+      buttons: ['OK']
+    });
+    await alert.present();
   }
 
   private getDepartmentEnum(departmentName: string): Department | null {
@@ -109,10 +200,22 @@ async openEventModal(event?: any) {
         return Department.CBA;
       case 'CAS':
         return Department.CAS;
+      case 'COE':
+        return Department.COE;
       case 'NURSING':
         return Department.NURSING;
+      case 'EDUCATION':
+        return Department.EDUCATION;
+      case 'UNIVERSITY':
+        return Department.UNIVERSITY;
       default:
+        console.warn('Unknown department:', departmentName);
         return null;
     }
+  }
+
+  // Utility method to format events for display
+  getFormattedEvent(event: Event) {
+    return this.eventService.formatEventForDisplay(event);
   }
 }

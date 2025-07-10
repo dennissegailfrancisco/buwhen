@@ -8,32 +8,60 @@
 </ion-header>
 
 <ion-content>
-  <ion-searchbar placeholder="Search"></ion-searchbar>
-  <ion-button fill="outline" slot="end">
-    <ion-icon name="filter-outline"></ion-icon>
-  </ion-button>
+  <div class="search-filter-container">
+    <ion-searchbar placeholder="Search events..."></ion-searchbar>
+    <ion-button fill="outline" slot="end">
+      <ion-icon name="filter-outline"></ion-icon>
+    </ion-button>
+  </div>
 
-  <ion-list>
-    <ion-item *ngFor="let event of events">
-      <ion-thumbnail slot="start">
-        <img [src]="event.image || 'assets/default-event.png'" />
-      </ion-thumbnail>
-      <ion-label>
-        <h2>{{ event.title }}</h2>
-        <p>{{ event.date }} & {{ event.time }}</p>
-        <p>{{ event.venue }}</p>
-      </ion-label>
-      <ion-button fill="clear" color="primary" (click)="openEventModal(event)">
-        Modify
-      </ion-button>
-      <ion-button fill="clear" color="danger" (click)="deleteEvent(event.id)">
-        <ion-icon name="trash-outline"></ion-icon>
-      </ion-button>
-    </ion-item>
-  </ion-list>
+  <!-- Events List -->
+  <div *ngIf="events.length > 0; else noEventsTemplate">
+    <ion-list>
+      <ion-item *ngFor="let event of events" class="event-item">
+        <ion-thumbnail slot="start">
+          <img [src]="event.image || 'assets/default-event.png'" alt="Event image" />
+        </ion-thumbnail>
+        <ion-label>
+          <h2>{{ event.title }}</h2>
+          <p class="event-datetime">
+            <ion-icon name="calendar-outline"></ion-icon>
+            {{ getFormattedEvent(event).formattedDateTime }}
+          </p>
+          <p class="event-venue">
+            <ion-icon name="location-outline"></ion-icon>
+            {{ event.venue }}
+          </p>
+          <p class="event-description">{{ event.description }}</p>
+        </ion-label>
+        <div class="event-actions" slot="end">
+          <ion-button fill="clear" color="primary" (click)="openEventModal(event)">
+            <ion-icon name="create-outline"></ion-icon>
+          </ion-button>
+          <ion-button fill="clear" color="danger" (click)="deleteEvent(event.id)">
+            <ion-icon name="trash-outline"></ion-icon>
+          </ion-button>
+        </div>
+      </ion-item>
+    </ion-list>
+  </div>
 
+  <!-- No Events Template -->
+  <ng-template #noEventsTemplate>
+    <div class="no-events-container">
+      <ion-icon name="calendar-outline" class="no-events-icon"></ion-icon>
+      <h3>No Events Found</h3>
+      <p>There are no events for {{ departmentName }} department yet.</p>
+      <ion-button color="primary" (click)="openEventModal()">
+        <ion-icon name="add-outline" slot="start"></ion-icon>
+        Create First Event
+      </ion-button>
+    </div>
+  </ng-template>
+
+  <!-- Floating Action Button -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="success"(click)="openEventModal()">
+    <ion-fab-button color="success" (click)="openEventModal()">
       <ion-icon name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>

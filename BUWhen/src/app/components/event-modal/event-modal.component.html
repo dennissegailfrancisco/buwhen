@@ -61,14 +61,14 @@
   <div class="time-picker">
     <!-- Hours Dropdown -->
     <ion-select formControlName="hours" placeholder="HH">
-      <ion-select-option *ngFor="let hour of hours" [value]="hour">
+      <ion-select-option *ngFor="let hour of hourOptions" [value]="hour">
         {{ hour }}
       </ion-select-option>
     </ion-select>
 
     <!-- Minutes Dropdown -->
     <ion-select formControlName="minutes" placeholder="MM">
-      <ion-select-option *ngFor="let minute of minutes" [value]="minute">
+      <ion-select-option *ngFor="let minute of minuteOptions" [value]="minute">
         {{ minute }}
       </ion-select-option>
     </ion-select>
@@ -80,8 +80,8 @@
     </ion-select>
   </div>
 </ion-item>
-<div class="error-message" *ngIf="time?.invalid && time?.touched">
-  <span *ngIf="time?.errors?.['required']">Time is required</span>
+<div class="error-message" *ngIf="(hours?.invalid && hours?.touched) || (minutes?.invalid && minutes?.touched) || (ampm?.invalid && ampm?.touched)">
+  <span *ngIf="hours?.errors?.['required'] || minutes?.errors?.['required'] || ampm?.errors?.['required']">Time is required</span>
 </div>
 
       <!-- Venue -->
