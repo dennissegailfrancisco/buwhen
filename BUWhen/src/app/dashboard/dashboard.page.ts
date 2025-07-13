@@ -27,6 +27,10 @@ export class DashboardPage implements OnInit {
   currentView: 'list' | 'calendar' = 'list';
   departments = Object.values(Department);
 
+  // For custom event details dialog
+  showEventDetails: boolean = false;
+  selectedEvent: Event | null = null;
+
   // Calendar configuration
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
@@ -41,7 +45,17 @@ export class DashboardPage implements OnInit {
     height: 'auto',
     themeSystem: 'standard'
   };
+bulletinImages: string[] = [
+  'assets/buevent1.jpg',
+   'assets/buevent2.jpg',
+  'assets/buevent3.jpg',
+  // Add more image paths as needed
+];
+currentBulletinIndex: number = 0;
 
+nextBulletinImage() {
+  this.currentBulletinIndex = (this.currentBulletinIndex + 1) % this.bulletinImages.length;
+}
   constructor(
     private authService: AuthService,
     private eventService: EventService,
@@ -156,17 +170,15 @@ export class DashboardPage implements OnInit {
 
   async showEventOptions(event: Event) {
     const canManage = this.authService.canManageEvents();
-    
     const buttons: any[] = [
       {
         text: 'View Details',
         icon: 'eye-outline',
         handler: () => {
-          this.viewEventDetails(event);
+          this.openEventDetails(event);
         }
       }
     ];
-
     if (canManage) {
       buttons.push(
         {
@@ -186,19 +198,34 @@ export class DashboardPage implements OnInit {
         }
       );
     }
-
     buttons.push({
       text: 'Cancel',
       icon: 'close',
       role: 'cancel'
     });
-
     const actionSheet = await this.actionSheetController.create({
       header: event.title,
       buttons
     });
-
     await actionSheet.present();
+  }
+
+  // Custom event details dialog methods
+  openEventDetails(event: Event) {
+    this.selectedEvent = event;
+    this.showEventDetails = true;
+  }
+
+  closeEventDetails() {
+    this.showEventDetails = false;
+    this.selectedEvent = null;
+  }
+
+  modifyEvent(event: Event | null) {
+    if (event) {
+      this.editEvent(event);
+      this.closeEventDetails();
+    }
   }
 
   async viewEventDetails(event: Event) {
@@ -235,11 +262,11 @@ export class DashboardPage implements OnInit {
       [Department.UNIVERSITY]: 'primary',
       [Department.CITE]: 'success',
       [Department.CHMT]: 'warning',
-      [Department.CBA]: 'danger',
-      [Department.CAS]: 'tertiary',
-      [Department.COE]: 'dark',
-      [Department.NURSING]: 'medium',
-      [Department.EDUCATION]: 'light'
+      [Department.CBAA]: 'danger',
+      [Department.CLAGE]: 'tertiary',
+      [Department.CEDE]: 'dark',
+      [Department.CNAHS]: 'medium',
+      [Department.CHED]: 'light'
     };
     return colors[department] || 'medium';
   }
@@ -271,11 +298,11 @@ export class DashboardPage implements OnInit {
       [Department.UNIVERSITY]: '#3880ff',
       [Department.CITE]: '#2dd36f',
       [Department.CHMT]: '#ffc409',
-      [Department.CBA]: '#eb445a',
-      [Department.CAS]: '#6030ff',
-      [Department.COE]: '#1e2023',
-      [Department.NURSING]: '#92949c',
-      [Department.EDUCATION]: '#f4f5f8'
+      [Department.CBAA]: '#eb445a',
+      [Department.CLAGE]: '#6030ff',
+      [Department.CEDE]: '#1e2023',
+      [Department.CNAHS]: '#92949c',
+      [Department.CHED]: '#f4f5f8'
     };
     return colors[department] || '#92949c';
   }

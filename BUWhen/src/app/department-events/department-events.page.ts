@@ -17,6 +17,10 @@ export class DepartmentEventsPage implements OnInit, OnDestroy {
   events: Event[] = [];
   private eventsSubscription?: Subscription;
 
+  // For custom delete dialog
+  showDeleteDialog: boolean = false;
+  eventToDelete: string | null = null;
+
   constructor(
     private route: ActivatedRoute, 
     private eventService: EventService,   
@@ -130,46 +134,43 @@ addEvent() {
     return await modal.present();
   }
 
-  async deleteEvent(eventId: string) {
-    const alert = await this.alertController.create({
-      header: 'Confirm Delete',
-      message: 'Are you sure you want to delete this event?',
-      buttons: [
-        {
-          text: 'Cancel',
-          role: 'cancel',
-        },
-        {
-          text: 'Delete',
-          role: 'destructive',
-          handler: async () => {
-            const loading = await this.loadingController.create({
-              message: 'Deleting event...',
-            });
-            await loading.present();
+  // Show custom delete dialog
+  deleteEvent(eventId: string) {
+    this.eventToDelete = eventId;
+    this.showDeleteDialog = true;
+  }
 
-            this.eventService.deleteEvent(eventId).subscribe({
-              next: async (success) => {
-                await loading.dismiss();
-                if (success) {
-                  this.loadEvents(); // Refresh the events list
-                  await this.showSuccessAlert('Event deleted successfully!');
-                } else {
-                  await this.showErrorAlert('Failed to delete event');
-                }
-              },
-              error: async (error) => {
-                await loading.dismiss();
-                console.error('Error deleting event:', error);
-                await this.showErrorAlert('Error occurred while deleting event');
-              }
-            });
-          }
-        }
-      ]
+  // Cancel delete dialog
+  cancelDelete() {
+    this.showDeleteDialog = false;
+    this.eventToDelete = null;
+  }
+
+  // Confirm delete
+  async confirmDelete() {
+    if (!this.eventToDelete) return;
+    const loading = await this.loadingController.create({
+      message: 'Deleting event...'
     });
-
-    await alert.present();
+    await loading.present();
+    this.eventService.deleteEvent(this.eventToDelete).subscribe({
+      next: async (success) => {
+        await loading.dismiss();
+        if (success) {
+          this.loadEvents();
+          await this.showSuccessAlert('Event deleted successfully!');
+        } else {
+          await this.showErrorAlert('Failed to delete event');
+        }
+        this.cancelDelete();
+      },
+      error: async (error) => {
+        await loading.dismiss();
+        console.error('Error deleting event:', error);
+        await this.showErrorAlert('Error occurred while deleting event');
+        this.cancelDelete();
+      }
+    });
   }
 
   private async showSuccessAlert(message: string) {
@@ -196,16 +197,16 @@ addEvent() {
         return Department.CITE;
       case 'CHMT':
         return Department.CHMT;
-      case 'CBA':
-        return Department.CBA;
-      case 'CAS':
-        return Department.CAS;
-      case 'COE':
-        return Department.COE;
-      case 'NURSING':
-        return Department.NURSING;
-      case 'EDUCATION':
-        return Department.EDUCATION;
+      case 'CBAA':
+        return Department.CBAA;
+      case 'CLAGE':
+        return Department.CLAGE;
+      case 'CEDE':
+        return Department.CEDE;
+      case 'CNAHS':
+        return Department.CNAHS;
+      case 'CHED':
+        return Department.CHED;
       case 'UNIVERSITY':
         return Department.UNIVERSITY;
       default:

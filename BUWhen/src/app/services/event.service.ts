@@ -41,7 +41,7 @@ export class EventService {
       date: '2025-10-12',
       time: '07:30 AM',
       venue: 'Nursing Building',
-      department: Department.NURSING,
+      department: Department.CNAHS,
       type: 'departmental',
       createdAt: new Date(),
       updatedAt: new Date()
@@ -53,7 +53,7 @@ export class EventService {
       date: '2025-11-05',
       time: '01:00 PM',
       venue: 'CBA Conference Hall',
-      department: Department.CBA,
+      department: Department.CBAA,
       type: 'departmental',
       createdAt: new Date(),
       updatedAt: new Date()

@@ -15,11 +15,11 @@ export interface Event {
 export enum Department {
   CITE = 'CITE',
   CHMT = 'CHMT',
-  CBA = 'CBA',
-  CAS = 'CAS',
-  COE = 'COE',
-  NURSING = 'Nursing',
-  EDUCATION = 'Education',
+  CBAA = 'CBAA',
+  CLAGE = 'CLAGE',
+  CEDE = 'CEDE',
+  CNAHS = ' CNAHS',
+  CHED = 'CHED',
   UNIVERSITY = 'University'
 }
 

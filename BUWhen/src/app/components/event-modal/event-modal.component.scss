@@ -1,7 +1,9 @@
 .form-container {
   padding: 20px;
 }
-
+.event-modal-toolbar{
+  --background:#B1AB86;
+}
 .form-item {
   margin-bottom: 16px;
   border-radius: 8px;
@@ -62,11 +64,11 @@ ion-segment {
     --placeholder-color: var(--ion-color-medium);
     
     &:first-child, &:nth-child(2) {
-      max-width: 80px;
+      max-width: 150px;
     }
     
     &:last-child {
-      max-width: 100px;
+      max-width: 300px;
     }
   }
 }
@@ -77,6 +79,136 @@ ion-segment {
     padding: 16px;
   }
   
+  .button-container {
+    padding: 0;
+  }
+}
+
+ion-content {
+  --background: #fdf6d7; // soft yellow background
+  border-radius: 16px;
+}
+
+.form-container {
+  padding: 24px 16px;
+  background: transparent;
+}
+
+.form-item {
+  margin-bottom: 18px;
+  border-radius: 10px;
+  background: #fffde9;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+  --background: #fffde9;
+
+  ion-label {
+    font-weight: 600;
+    color: #234a1c; // dark green
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+.time{
+  color: #234a1c;
+}
+  ion-input,
+  ion-textarea,
+  ion-select,
+  ion-datetime {
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #d2d2b8;
+    padding: 8px 12px;
+    font-size: 15px;
+    --background: #fff;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --placeholder-color: #a3a380;
+    color: #234a1c; // dark green
+  }
+}
+
+.error-message {
+  margin: 2px 8px 10px 8px;
+  color: #c0392b;
+  font-size: 12px;
+}
+
+.button-container {
+  margin-top: 28px;
+  padding: 0 4px;
+
+  ion-button {
+    width: 100%;
+    border-radius: 8px;
+    background: #7a8853;
+    color: #fff;
+    font-weight: 600;
+    font-size: 16px;
+    letter-spacing: 0.5px;
+    box-shadow: none;
+    margin-bottom: 0;
+
+    &[fill="outline"] {
+      background: transparent;
+      color: #7a8853;
+      border: 2px solid #7a8853;
+    }
+  }
+.submit-button{
+  --background: #7a8853;
+}
+  ion-button:disabled, submit-button:disabled {
+    opacity: 0.6;
+    pointer-events: none;
+    color: #7a8853;
+  }
+}
+
+ion-header,
+ion-toolbar {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-bottom: none !important;
+}
+
+ion-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: #234a1c;
+  margin-bottom: 0;
+}
+
+ion-buttons {
+  ion-button {
+    color: #234a1c;
+    font-size: 20px;
+    --background: transparent;
+  }
+}
+
+.time-picker {
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  margin-top: 8px;
+
+  ion-select {
+    flex: 1;
+    border-radius: 8px;
+    background: #fff;
+    border: 1px solid #d2d2b8;
+    --placeholder-color: #a3a380;
+    max-width: 80px;
+  }
+}
+// Stronger selector and ::ng-deep for Ionic/Angular
+::ng-deep .form-item ion-label.label-error {
+  color: #c0392b !important;
+}
+@media (max-width: 768px) {
+  .form-container {
+    padding: 12px;
+  }
   .button-container {
     padding: 0;
   }
