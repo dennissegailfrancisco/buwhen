@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar class="event-modal-toolbar"> 
     <ion-title>{{ mode === 'create' ? 'Create Event' : 'Edit Event' }}</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="dismiss()">
@@ -14,7 +14,7 @@
     <div class="form-container">
       <!-- Event Title -->
       <ion-item class="form-item">
-        <ion-label position="stacked">Event Title *</ion-label>
+        <ion-label [ngClass]="{'label-error': title?.invalid && title?.touched}" position="stacked">Event Title *</ion-label>
         <ion-input 
           formControlName="title"
           placeholder="Enter event title"
@@ -28,7 +28,7 @@
 
       <!-- Event Description -->
       <ion-item class="form-item">
-        <ion-label position="stacked">Description *</ion-label>
+<ion-label [ngClass]="{'label-error': description?.invalid && description?.touched}" position="stacked">Description *</ion-label>
         <ion-textarea 
           formControlName="description"
           placeholder="Enter event description"
@@ -43,7 +43,7 @@
 
       <!-- Date and Time Row -->
 <ion-item class="form-item">
-  <ion-label position="stacked">Date *</ion-label>
+<ion-label [ngClass]="{'label-error': date?.invalid && date?.touched}" position="stacked">Date *</ion-label>
   <ion-datetime
     formControlName="date"
     presentation="date"
@@ -57,7 +57,7 @@
 
 <!-- Time Input -->
 <ion-item class="form-item">
-  <ion-label position="stacked">Time *</ion-label>
+<ion-label [ngClass]="{'label-error': hours?.invalid && hours?.touched || minutes?.invalid && minutes?.touched || ampm?.invalid && ampm?.touched}" position="stacked">Time *</ion-label>
   <div class="time-picker">
     <!-- Hours Dropdown -->
     <ion-select formControlName="hours" placeholder="HH">
@@ -86,7 +86,7 @@
 
       <!-- Venue -->
       <ion-item class="form-item">
-        <ion-label position="stacked">Venue *</ion-label>
+<ion-label [ngClass]="{'label-error': venue?.invalid && venue?.touched}" position="stacked">Venue *</ion-label>
         <ion-input 
           formControlName="venue"
           placeholder="Enter event venue"
@@ -100,8 +100,7 @@
 
       <!-- Department -->
       <ion-item class="form-item">
-        <ion-label position="stacked">Department *</ion-label>
-        <ion-select formControlName="department" placeholder="Select department">
+<ion-label [ngClass]="{'label-error': department?.invalid && department?.touched}" position="stacked">Department *</ion-label>        <ion-select formControlName="department" placeholder="Select department">
           <ion-select-option *ngFor="let dept of departments" [value]="dept">
             {{ dept }}
           </ion-select-option>
@@ -113,7 +112,7 @@
 
       <!-- Event Type (only if user can create university events) -->
       <ion-item class="form-item" *ngIf="canCreateUniversityEvents()">
-        <ion-label position="stacked">Event Type *</ion-label>
+        <ion-label [ngClass]="{'label-error': title?.invalid && title?.touched}" position="stacked">Event Type *</ion-label>
         <ion-segment formControlName="type">
           <ion-segment-button value="departmental">
             <ion-label>Departmental</ion-label>
@@ -130,7 +129,8 @@
           expand="block" 
           type="submit" 
           [disabled]="eventForm.invalid || isSubmitting"
-          color="primary">
+        class="submit-button"
+          >
           <ion-icon name="checkmark-outline" slot="start"></ion-icon>
           {{ mode === 'create' ? 'Create Event' : 'Update Event' }}
         </ion-button>

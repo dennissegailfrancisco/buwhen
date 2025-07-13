@@ -1,5 +1,5 @@
 <ion-header>
-  <ion-toolbar color="primary">
+  <ion-toolbar >
     <ion-buttons slot="start">
       <ion-menu-button></ion-menu-button>
     </ion-buttons>
@@ -17,11 +17,9 @@
 
   <!-- Events List -->
   <div *ngIf="events.length > 0; else noEventsTemplate">
-    <ion-list>
+    <ion-list class="events-list">
       <ion-item *ngFor="let event of events" class="event-item">
-        <ion-thumbnail slot="start">
-          <img [src]="event.image || 'assets/default-event.png'" alt="Event image" />
-        </ion-thumbnail>
+
         <ion-label>
           <h2>{{ event.title }}</h2>
           <p class="event-datetime">
@@ -35,10 +33,10 @@
           <p class="event-description">{{ event.description }}</p>
         </ion-label>
         <div class="event-actions" slot="end">
-          <ion-button fill="clear" color="primary" (click)="openEventModal(event)">
+          <ion-button fill="clear" class="modify" (click)="openEventModal(event)">
             <ion-icon name="create-outline"></ion-icon>
           </ion-button>
-          <ion-button fill="clear" color="danger" (click)="deleteEvent(event.id)">
+          <ion-button fill="clear" class="delete" (click)="deleteEvent(event.id)">
             <ion-icon name="trash-outline"></ion-icon>
           </ion-button>
         </div>
@@ -61,8 +59,21 @@
 
   <!-- Floating Action Button -->
   <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button color="success" (click)="openEventModal()">
-      <ion-icon name="add-outline"></ion-icon>
+    <ion-fab-button class="add" (click)="openEventModal()">
+      <ion-icon class="plusbutton" name="add-outline"></ion-icon>
     </ion-fab-button>
   </ion-fab>
+
+  <!-- Delete Confirmation Dialog -->
+  <div *ngIf="showDeleteDialog" class="delete-dialog-backdrop">
+    <div class="delete-dialog">
+      <div class="delete-dialog-header">DELETE EVENT</div>
+      <hr class="delete-dialog-divider" />
+      <div class="delete-dialog-message">Are you sure you want to delete this event?</div>
+      <div class="delete-dialog-actions">
+        <button class="delete-cancel" (click)="cancelDelete()">Cancel</button>
+        <button class="delete-confirm" (click)="confirmDelete()">Confirm</button>
+      </div>
+    </div>
+  </div>
 </ion-content>

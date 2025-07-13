@@ -12,15 +12,13 @@
 <ion-content [fullscreen]="true" class="dashboard-content">
   <div *ngIf="currentView === 'list'" class="list-view">
     <div class="bulletin-section">
-      <h2 class="section-title">The BU-lletin Board</h2>
-      <ion-card class="bulletin-card">
-        <ion-card-content>
-          <div class="bulletin-item">
-            <span class="bulletin-label">--- EVENT Cover ---</span>
-            <ion-icon name="chevron-forward-outline" class="bulletin-arrow"></ion-icon>
-          </div>
-        </ion-card-content>
-      </ion-card>
+          <h2 class="section-title">The BU-lletin Board</h2>
+      <div class="bulletin-item">
+        <div class="bulletin-arrow-container">
+          <ion-icon name="chevron-forward-outline" class="bulletin-arrow" (click)="nextBulletinImage()"></ion-icon>
+        </div>
+        <img [src]="bulletinImages[currentBulletinIndex]" class="bulletin-image" alt="Event Cover" />
+      </div>
     </div>
 
     <!-- More Upcoming Events Section -->
@@ -54,7 +52,7 @@
         <ion-card 
           *ngFor="let event of filteredEvents.slice(0, 6)" 
           class="event-item-card"
-          (click)="showEventOptions(event)">
+          (click)="openEventDetails(event)">
           <ion-card-content>
             <div class="event-item">
               <div class="event-icon">
@@ -79,6 +77,46 @@
           <h3>No events found</h3>
           <p>There are no events matching your current filters.</p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Event Details Dialog -->
+  <div *ngIf="showEventDetails" class="event-details-dialog-backdrop">
+    <div class="event-details-dialog">
+      <div class="event-details-header">
+        
+        <div class="event-details-title-type">
+        
+          <span class="event-details-title">{{ selectedEvent?.title }}</span>
+        
+        </div>
+   
+  
+      </div>
+           <div class="event-details-section">
+              <div class="event-details-label">Event Held by:</div>
+         <div class="event-details-value">{{ selectedEvent?.type | titlecase }}</div>
+      </div>
+       <hr class="event-details-divider" />
+      <div class="event-details-section">
+        <div class="event-details-label">Description</div>
+        <div class="event-details-value">{{ selectedEvent?.description }}</div>
+      </div>
+      <hr class="event-details-divider" />
+      <div class="event-details-section">
+        <div class="event-details-label">Date & Time:</div>
+        <div class="event-details-value">{{ selectedEvent?.date | date:'MMM dd, yyyy' }} • {{ selectedEvent?.time }}</div>
+      </div>
+      <hr class="event-details-divider" />
+      <div class="event-details-section">
+        <div class="event-details-label">Venue</div>
+        <div class="event-details-value">{{ selectedEvent?.venue }}</div>
+      </div>
+      <hr class="event-details-divider" />
+      <div class="event-details-actions">
+        <button class="event-details-close" (click)="closeEventDetails()">CLOSE</button>
+        <button class="event-details-modify" (click)="modifyEvent(selectedEvent)">MODIFY</button>
       </div>
     </div>
   </div>

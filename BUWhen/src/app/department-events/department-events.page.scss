@@ -12,12 +12,18 @@ ion-toolbar {
   align-items: center;
   padding: 16px;
   gap: 8px;
+  --background : #ffffff !important;
   
   ion-searchbar {
     flex: 1;
+      --background : #ffffff !important;
+      color: #666666;
   }
 }
-
+.events-list {
+  --background: #fdf6e4 !important;
+  color:  #fdf6e4 !important;
+}
 .event-item {
   --background: #a5b89c;
   --color: #ffffff;
@@ -47,16 +53,16 @@ ion-toolbar {
       }
       
       &.event-datetime {
-        color: #e8f5e8;
+        color: #07371D;
         font-weight: 500;
       }
       
       &.event-venue {
-        color: #d4e6d4;
+        color: #07371D;
       }
       
       &.event-description {
-        color: #c0d4c0;
+        color: #07371D;
         font-size: 13px;
         margin-top: 6px;
         max-width: 250px;
@@ -134,4 +140,88 @@ ion-fab-button {
   &:hover {
     --background: #45a049;
   }
+}
+.list-md {
+  background: #fdf6e4;
+}
+.modify{
+  color: #07371D;
+  width: 100px !important;
+  height: 30px !important;
+
+}
+.delete{
+  color: #881515 !important;
+}
+.add{
+  --background: #07371D;
+}
+.plusbutton{
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 600 !important;
+}
+
+.delete-dialog-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.18);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.delete-dialog {
+  background: #fdf6d7;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.12);
+  padding: 24px 28px;
+  min-width: 260px;
+  text-align: center;
+}
+
+.delete-dialog-header {
+  font-size: 22px;
+  font-weight: bold;
+  color: #234a1c;
+  margin-bottom: 8px;
+}
+
+.delete-dialog-divider {
+  border: none;
+  border-top: 2px solid #234a1c;
+  margin: 0 0 18px 0;
+}
+
+.delete-dialog-message {
+  font-size: 16px;
+  color: #234a1c;
+  margin-bottom: 22px;
+}
+
+.delete-dialog-actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+.delete-cancel {
+  background: none;
+  border: none;
+  color: #234a1c;
+  font-size: 16px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.delete-confirm {
+  background: #7a8853;
+  color: #fff;
+  border: none;
+  font-size: 16px;
+  padding: 8px 18px;
+  border-radius: 8px;
+  cursor: pointer;
 }
