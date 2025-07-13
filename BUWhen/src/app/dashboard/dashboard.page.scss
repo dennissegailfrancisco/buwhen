@@ -17,15 +17,14 @@
 // Main Content
 .dashboard-content {
   --background: #fdf6e4;
-  min-height: 100vh;
-  height: 100%;
-  overflow-y: auto;
   height: 200vh;
+overflow-y: auto;
 }
 
 // List View Styling
 .list-view {
   padding: 20px 16px;
+  min-height: 0;
 }
 
 // BU-lletin Board Section
@@ -95,6 +94,7 @@
         --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         width: 200px;
         height: 40px;
+        color: #234a1c;
         
         .searchbar-input {
           font-size: 14px;
@@ -107,6 +107,8 @@
         min-width: 120px;
         height: 40px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+        color: #234a1c;
+        
       }
     }
   }
@@ -114,94 +116,116 @@
 
 // Events List
 .events-list {
-  .event-item-card {
-    background: #a5b89c;
-    border-radius: 12px;
-    margin: 0 0 12px 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    cursor: pointer;
+  max-height: 900px;
+  height: 320px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #a5b89c #fdf6e4;
+}
+
+.events-list::-webkit-scrollbar {
+  width: 8px;
+}
+.events-list::-webkit-scrollbar-thumb {
+  background: #a5b89c;
+  border-radius: 8px;
+}
+.events-list::-webkit-scrollbar-track {
+  background: #fdf6e4;
+}
+ion-select-option {
+  --color: #234a1c;
+  --background: #fdf6e4;
+  margin-left: 10px !important;
+} 
+
+.event-item-card {
+  background: #a5b89c;
+  border-radius: 12px;
+  margin: 0 0 12px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  }
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+  
+  ion-card-content {
+    padding: 16px 20px;
     
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-    }
-    
-    &:last-child {
-      margin-bottom: 0;
-    }
-    
-    ion-card-content {
-      padding: 16px 20px;
+    .event-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
       
-      .event-item {
+      .event-icon {
+        width: 48px;
+        height: 48px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 8px;
         display: flex;
         align-items: center;
-        gap: 16px;
+        justify-content: center;
+        flex-shrink: 0;
         
-        .event-icon {
-          width: 48px;
-          height: 48px;
-          background: rgba(255, 255, 255, 0.2);
-          border-radius: 8px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          flex-shrink: 0;
-          
-          ion-icon {
-            font-size: 24px;
-            color: #ffffff;
-          }
+        ion-icon {
+          font-size: 24px;
+          color: #ffffff;
+        }
+      }
+      
+      .event-details {
+        flex: 1;
+        min-width: 0; // Allows text truncation
+        
+        .event-title {
+          font-size: 16px;
+          font-weight: 600;
+          color: #234a1c;
+          margin: 0 0 4px 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         
-        .event-details {
-          flex: 1;
-          min-width: 0; // Allows text truncation
-          
-          .event-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: #ffffff;
-            margin: 0 0 4px 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
-          
-          .event-meta {
-            font-size: 14px;
-            color: rgba(255, 255, 255, 0.9);
-            margin: 0 0 4px 0;
-            font-weight: 500;
-          }
-          
-          .event-venue {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.8);
-            margin: 0;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-          }
+        .event-meta {
+          font-size: 14px;
+          color: #234a1c;
+          margin: 0 0 4px 0;
+          font-weight: 500;
         }
         
-        .event-actions {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          flex-shrink: 0;
-          
-          .more-text {
-            font-size: 14px;
-            color: #ffffff;
-            font-weight: 500;
-          }
-          
-          ion-icon {
-            font-size: 18px;
-            color: #ffffff;
-          }
+        .event-venue {
+          font-size: 13px;
+          color: #234a1c;
+          margin: 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+      }
+      
+      .event-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+        
+        .more-text {
+          font-size: 14px;
+          color: #ffffff;
+          font-weight: 500;
+        }
+        
+        ion-icon {
+          font-size: 18px;
+          color: #ffffff;
         }
       }
     }
@@ -243,7 +267,7 @@
     .section-title {
       font-size: 24px;
       font-weight: 700;
-      color: #2c2c2c;
+      color: #234a1c;
       margin: 0 0 16px 0;
     }
     
