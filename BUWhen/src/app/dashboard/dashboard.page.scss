@@ -259,30 +259,149 @@ ion-select-option {
 
 // Calendar View
 .calendar-view {
-  padding: 20px 16px;
-  
+  padding: 24px 16px;
+  background: #FEFAE0;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(129, 144, 103, 0.12);
+  margin-top: 16px;
+
   .calendar-header {
-    margin-bottom: 20px;
-    
+    margin-bottom: 24px;
+    background: #FEFAE0;
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(177, 171, 134, 0.10);
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
     .section-title {
-      font-size: 24px;
+      font-size: 28px;
       font-weight: 700;
-      color: #234a1c;
-      margin: 0 0 16px 0;
+      color: #0A400C;
+      margin: 0 0 18px 0;
+      letter-spacing: -0.5px;
+      text-shadow: 0 2px 8px #FEFAE0;
     }
-    
+
     .calendar-segment {
-      --background: #ffffff;
+      --background: #B1AB86;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(177, 171, 134, 0.10);
+      color: #0A400C;
+      font-weight: 700;
+      margin-bottom: 10px;
+      padding: 8px 0;
+    }
+    ion-segment-button {
+      --background: #FEFAE0;
+  
+      --color: #819067;
+     
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
       border-radius: 8px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+      margin: 0 4px;
+      transition: background 0.2s, color 0.2s;
+    }
+    ::ng-deep ion-segment-button.segment-button-checked,
+   .segment-button-inner {
+      background: #FEFAE0 !important;
+      color: #FEFAE0 !important;
+      box-shadow: 0 2px 8px rgba(10, 64, 12, 0.10);
+      
+    }
+   .segment-button-inner {
+      color: #FEFAE0 !important;
     }
   }
-  
+
   .calendar-container {
-    background: #ffffff;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    background: #FEFAE0;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 2px 16px rgba(177, 171, 134, 0.10);
+    min-height: 420px;
+    margin-top: 8px;
+    /* FullCalendar custom colors */
+    .fc {
+      background: #FEFAE0;
+      color: #0A400C;
+      font-family: inherit;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(177, 171, 134, 0.08);
+    }
+    .fc-toolbar-title {
+      color: #0A400C;
+      font-weight: 700 !important;
+      font-size: 10px;
+    }
+    .fc-toolbar {
+      background: #B1AB86;
+      border-radius: 10px;
+      color: #0A400C;
+      margin-bottom: 16px;
+      padding: 10px 16px;
+      font-size: 18px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(129, 144, 103, 0.10);
+    }
+    .fc-button {
+      background: #819067 !important;
+      color: #FEFAE0 !important;
+      border: none;
+      border-radius: 8px;
+      font-weight: 700;
+      margin: 0 4px;
+      font-size: 15px;
+      box-shadow: 0 2px 8px rgba(129, 144, 103, 0.10);
+      transition: background 0.2s;
+    }
+    .fc-button-active,
+    .fc-button-primary {
+      background: #0A400C !important;
+      color: #FEFAE0 !important;
+      box-shadow: 0 2px 8px rgba(10, 64, 12, 0.10);
+    }
+    .fc-daygrid-day {
+      background: #FEFAE0;
+      border-radius: 8px;
+      border: 1px solid #B1AB86;
+    }
+    .fc-daygrid-day-number {
+      color: #0A400C;
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .fc-event {
+      background: #819067 !important;
+      color: #FEFAE0 !important;
+      border: 2px solid #B1AB86 !important;
+      border-radius: 8px;
+      font-weight: 600;
+      box-shadow: 0 2px 8px rgba(129, 144, 103, 0.10);
+      font-size: 15px;
+      padding: 4px 8px;
+    }
+    .fc-event-title {
+      color: #FEFAE0 !important;
+      font-weight: 600;
+    }
+    .fc-today {
+      background: #B1AB86 !important;
+      border-radius: 8px;
+      border: 2px solid #819067 !important;
+    }
+    .fc-col-header-cell {
+      background: #B1AB86;
+      color: #0A400C;
+      font-weight: 700;
+      font-size: 15px;
+      border-radius: 8px 8px 0 0;
+      border: none;
+      padding: 6px 0;
+    }
   }
 }
 
