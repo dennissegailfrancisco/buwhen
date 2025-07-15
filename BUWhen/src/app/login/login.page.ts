@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, AlertController } from '@ionic/angular';
+import { LoadingController, AlertController, ToastController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -19,8 +19,18 @@ export class LoginPage implements OnInit {
     private authService: AuthService,
     private router: Router,
     private loadingController: LoadingController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private toastController: ToastController
   ) { }
+  async showComingSoon() {
+    const toast = await this.toastController.create({
+      message: 'This feature is coming soon!',
+      duration: 2000,
+      color: 'light',
+      position: 'top'
+    });
+    await toast.present();
+  }
 
   ngOnInit() {
     this.createLoginForm();

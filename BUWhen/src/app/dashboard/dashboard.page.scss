@@ -53,6 +53,7 @@ overflow-y: auto;
         justify-content: space-between;
         align-items: center;
         
+        
         .bulletin-label {
           color: #666;
           font-size: 16px;
@@ -116,8 +117,8 @@ overflow-y: auto;
 
 // Events List
 .events-list {
-  max-height: 900px;
-  height: 320px;
+  max-height: 1500px;
+  height: 60vh;
   overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: #a5b89c #fdf6e4;
@@ -182,8 +183,7 @@ ion-select-option {
       
       .event-details {
         flex: 1;
-        min-width: 0; // Allows text truncation
-        
+        min-width: 0; 
         .event-title {
           font-size: 16px;
           font-weight: 600;
