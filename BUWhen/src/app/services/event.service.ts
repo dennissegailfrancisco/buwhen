@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { StorageService } from './storage.service';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { Event, CreateEventDto, Department } from '../models/event.model';
 
@@ -9,6 +10,7 @@ export class EventService {
   private eventsSubject = new BehaviorSubject<Event[]>([]);
   public events$ = this.eventsSubject.asObservable();
 
+  private readonly STORAGE_KEY = 'events';
   private mockEvents: Event[] = [
     {
       id: '1',
@@ -60,8 +62,23 @@ export class EventService {
     }
   ];
 
-  constructor() {
-    this.eventsSubject.next(this.mockEvents);
+  constructor(private storageService: StorageService) {
+    // Load from local storage if available, else use mockEvents
+    const stored = this.storageService.get<Event[]>(this.STORAGE_KEY);
+    if (stored && Array.isArray(stored) && stored.length > 0) {
+      this.eventsSubject.next(stored);
+    } else {
+      this.eventsSubject.next(this.mockEvents);
+      this.saveToStorage(this.mockEvents);
+    }
+    // Subscribe to changes and persist
+    this.events$.subscribe(events => {
+      this.saveToStorage(events);
+    });
+  }
+
+  private saveToStorage(events: Event[]) {
+    this.storageService.set(this.STORAGE_KEY, events);
   }
 
   getAllEvents(): Observable<Event[]> {
@@ -96,6 +113,7 @@ export class EventService {
     const currentEvents = this.eventsSubject.value;
     const updatedEvents = [...currentEvents, newEvent];
     this.eventsSubject.next(updatedEvents);
+    this.saveToStorage(updatedEvents);
 
     console.log('Event created successfully:', newEvent);
 
@@ -128,6 +146,7 @@ export class EventService {
     const updatedEvents = [...currentEvents];
     updatedEvents[eventIndex] = updatedEvent;
     this.eventsSubject.next(updatedEvents);
+    this.saveToStorage(updatedEvents);
 
     console.log('Event updated successfully:', updatedEvent);
 
@@ -146,6 +165,7 @@ export class EventService {
     }
 
     this.eventsSubject.next(filteredEvents);
+    this.saveToStorage(filteredEvents);
     console.log('Event deleted successfully:', id);
     
     return new BehaviorSubject(true).asObservable();
