@@ -1,6 +1,8 @@
 <ion-header>
-  <ion-toolbar class="event-modal-toolbar"> 
-    <ion-title>{{ mode === 'create' ? 'Create Event' : 'Edit Event' }}</ion-title>
+  <ion-toolbar class="event-modal-toolbar">
+    <ion-title>{{
+      mode === "create" ? "Create Event" : "Edit Event"
+    }}</ion-title>
     <ion-buttons slot="end">
       <ion-button fill="clear" (click)="dismiss()">
         <ion-icon name="close"></ion-icon>
@@ -14,105 +16,185 @@
     <div class="form-container">
       <!-- Event Title -->
       <ion-item class="form-item">
-        <ion-label [ngClass]="{'label-error': title?.invalid && title?.touched}" position="stacked">Event Title *</ion-label>
-        <ion-input 
+        <ion-label
+          [ngClass]="{ 'label-error': title?.invalid && title?.touched }"
+          position="stacked"
+          >Event Title *</ion-label
+        >
+        <ion-input
           formControlName="title"
           placeholder="Enter event title"
-          type="text">
+          type="text"
+        >
         </ion-input>
       </ion-item>
       <div class="error-message" *ngIf="title?.invalid && title?.touched">
         <span *ngIf="title?.errors?.['required']">Event title is required</span>
-        <span *ngIf="title?.errors?.['minlength']">Title must be at least 3 characters</span>
+        <span *ngIf="title?.errors?.['minlength']"
+          >Title must be at least 3 characters</span
+        >
       </div>
 
       <!-- Event Description -->
       <ion-item class="form-item">
-<ion-label [ngClass]="{'label-error': description?.invalid && description?.touched}" position="stacked">Description *</ion-label>
-        <ion-textarea 
+        <ion-label
+          [ngClass]="{
+            'label-error': description?.invalid && description?.touched
+          }"
+          position="stacked"
+          >Description *</ion-label
+        >
+        <ion-textarea
           formControlName="description"
           placeholder="Enter event description"
           rows="4"
-          autoGrow="true">
+          autoGrow="true"
+        >
         </ion-textarea>
       </ion-item>
-      <div class="error-message" *ngIf="description?.invalid && description?.touched">
-        <span *ngIf="description?.errors?.['required']">Description is required</span>
-        <span *ngIf="description?.errors?.['minlength']">Description must be at least 10 characters</span>
+      <div
+        class="error-message"
+        *ngIf="description?.invalid && description?.touched"
+      >
+        <span *ngIf="description?.errors?.['required']"
+          >Description is required</span
+        >
+        <span *ngIf="description?.errors?.['minlength']"
+          >Description must be at least 10 characters</span
+        >
       </div>
 
       <!-- Date and Time Row -->
-<ion-item class="form-item">
-<ion-label [ngClass]="{'label-error': date?.invalid && date?.touched}" position="stacked">Date *</ion-label>
-  <ion-datetime
-    formControlName="date"
-    presentation="date"
-    [min]="today"
-    placeholder="Select a date">
-  </ion-datetime>
-</ion-item>
-<div class="error-message" *ngIf="date?.invalid && date?.touched">
-  <span *ngIf="date?.errors?.['required']">Date is required</span>
-</div>
+      <ion-item class="form-item">
+        <ion-label
+          [ngClass]="{ 'label-error': date?.invalid && date?.touched }"
+          position="stacked"
+          >Date *</ion-label
+        >
+        <ion-datetime
+          formControlName="date"
+          presentation="date"
+          [min]="today"
+          placeholder="Select a date"
+          (ionChange)="onDateChange($event)"
+          value="{{ eventForm?.get('date')?.value || '' }}"
+          display-format="YYYY-MM-DD"
+          prefer-wheel="false"
+        ></ion-datetime>
+      </ion-item>
+      <div class="error-message" *ngIf="date?.invalid && date?.touched">
+        <span *ngIf="date?.errors?.['required']">Date is required</span>
+        <span *ngIf="date?.errors?.['invalidDate']"
+          >Please select a valid date in YYYY-MM-DD format</span
+        >
+      </div>
 
-<!-- Time Input -->
-<ion-item class="form-item">
-<ion-label [ngClass]="{'label-error': hours?.invalid && hours?.touched || minutes?.invalid && minutes?.touched || ampm?.invalid && ampm?.touched}" position="stacked">Time *</ion-label>
-  <div class="time-picker">
-    <!-- Hours Dropdown -->
-    <ion-select formControlName="hours" placeholder="HH">
-      <ion-select-option *ngFor="let hour of hourOptions" [value]="hour">
-        {{ hour }}
-      </ion-select-option>
-    </ion-select>
+      <!-- Time Input -->
+      <ion-item class="form-item">
+        <ion-label
+          [ngClass]="{
+            'label-error':
+              (hours?.invalid && hours?.touched) ||
+              (minutes?.invalid && minutes?.touched) ||
+              (ampm?.invalid && ampm?.touched)
+          }"
+          position="stacked"
+          >Time *</ion-label
+        >
+        <div class="time-picker">
+          <!-- Hours Dropdown -->
+          <ion-select formControlName="hours" placeholder="HH">
+            <ion-select-option *ngFor="let hour of hourOptions" [value]="hour">
+              {{ hour }}
+            </ion-select-option>
+          </ion-select>
 
-    <!-- Minutes Dropdown -->
-    <ion-select formControlName="minutes" placeholder="MM">
-      <ion-select-option *ngFor="let minute of minuteOptions" [value]="minute">
-        {{ minute }}
-      </ion-select-option>
-    </ion-select>
+          <!-- Minutes Dropdown -->
+          <ion-select formControlName="minutes" placeholder="MM">
+            <ion-select-option
+              *ngFor="let minute of minuteOptions"
+              [value]="minute"
+            >
+              {{ minute }}
+            </ion-select-option>
+          </ion-select>
 
-    <!-- AM/PM Dropdown -->
-    <ion-select formControlName="ampm" placeholder="AM/PM">
-      <ion-select-option value="AM">AM</ion-select-option>
-      <ion-select-option value="PM">PM</ion-select-option>
-    </ion-select>
-  </div>
-</ion-item>
-<div class="error-message" *ngIf="(hours?.invalid && hours?.touched) || (minutes?.invalid && minutes?.touched) || (ampm?.invalid && ampm?.touched)">
-  <span *ngIf="hours?.errors?.['required'] || minutes?.errors?.['required'] || ampm?.errors?.['required']">Time is required</span>
-</div>
+          <!-- AM/PM Dropdown -->
+          <ion-select formControlName="ampm" placeholder="AM/PM">
+            <ion-select-option value="AM">AM</ion-select-option>
+            <ion-select-option value="PM">PM</ion-select-option>
+          </ion-select>
+        </div>
+      </ion-item>
+      <div
+        class="error-message"
+        *ngIf="
+          (hours?.invalid && hours?.touched) ||
+          (minutes?.invalid && minutes?.touched) ||
+          (ampm?.invalid && ampm?.touched)
+        "
+      >
+        <span
+          *ngIf="hours?.errors?.['required'] || minutes?.errors?.['required'] || ampm?.errors?.['required']"
+          >Time is required</span
+        >
+      </div>
 
       <!-- Venue -->
       <ion-item class="form-item">
-<ion-label [ngClass]="{'label-error': venue?.invalid && venue?.touched}" position="stacked">Venue *</ion-label>
-        <ion-input 
+        <ion-label
+          [ngClass]="{ 'label-error': venue?.invalid && venue?.touched }"
+          position="stacked"
+          >Venue *</ion-label
+        >
+        <ion-input
           formControlName="venue"
           placeholder="Enter event venue"
-          type="text">
+          type="text"
+        >
         </ion-input>
       </ion-item>
       <div class="error-message" *ngIf="venue?.invalid && venue?.touched">
         <span *ngIf="venue?.errors?.['required']">Venue is required</span>
-        <span *ngIf="venue?.errors?.['minlength']">Venue must be at least 3 characters</span>
+        <span *ngIf="venue?.errors?.['minlength']"
+          >Venue must be at least 3 characters</span
+        >
       </div>
 
       <!-- Department -->
       <ion-item class="form-item">
-<ion-label [ngClass]="{'label-error': department?.invalid && department?.touched}" position="stacked">Department *</ion-label>        <ion-select formControlName="department" placeholder="Select department">
+        <ion-label
+          [ngClass]="{
+            'label-error': department?.invalid && department?.touched
+          }"
+          position="stacked"
+          >Department *</ion-label
+        >
+        <ion-select
+          formControlName="department"
+          placeholder="Select department"
+        >
           <ion-select-option *ngFor="let dept of departments" [value]="dept">
             {{ dept }}
           </ion-select-option>
         </ion-select>
       </ion-item>
-      <div class="error-message" *ngIf="department?.invalid && department?.touched">
-        <span *ngIf="department?.errors?.['required']">Department is required</span>
+      <div
+        class="error-message"
+        *ngIf="department?.invalid && department?.touched"
+      >
+        <span *ngIf="department?.errors?.['required']"
+          >Department is required</span
+        >
       </div>
 
       <!-- Event Type (only if user can create university events) -->
       <ion-item class="form-item" *ngIf="canCreateUniversityEvents()">
-        <ion-label [ngClass]="{'label-error': title?.invalid && title?.touched}" position="stacked">Event Type *</ion-label>
+        <ion-label
+          [ngClass]="{ 'label-error': title?.invalid && title?.touched }"
+          position="stacked"
+          >Event Type *</ion-label
+        >
         <ion-segment formControlName="type">
           <ion-segment-button value="departmental">
             <ion-label>Departmental</ion-label>
@@ -125,22 +207,23 @@
 
       <!-- Action Buttons -->
       <div class="button-container">
-        <ion-button 
-          expand="block" 
-          type="submit" 
+        <ion-button
+          expand="block"
+          type="submit"
           [disabled]="eventForm.invalid || isSubmitting"
-        class="submit-button"
-          >
+          class="submit-button"
+        >
           <ion-icon name="checkmark-outline" slot="start"></ion-icon>
-          {{ mode === 'create' ? 'Create Event' : 'Update Event' }}
+          {{ mode === "create" ? "Create Event" : "Update Event" }}
         </ion-button>
-        
-        <ion-button 
-          expand="block" 
-          fill="outline" 
-          color="medium" 
+
+        <ion-button
+          expand="block"
+          fill="outline"
+          color="medium"
           (click)="dismiss()"
-          [disabled]="isSubmitting">
+          [disabled]="isSubmitting"
+        >
           <ion-icon name="close-outline" slot="start"></ion-icon>
           Cancel
         </ion-button>

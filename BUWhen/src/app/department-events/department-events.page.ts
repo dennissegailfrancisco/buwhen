@@ -80,9 +80,9 @@ addEvent() {
     date: '2025-12-01',
     time: '10:00',
     venue: 'New Venue',
-    department: department, // Ensured department is not null
-    type: 'departmental' as 'departmental', // Explicitly typed as 'departmental'
-    image: 'assets/default-event.png', // Optional image property
+    department: department, 
+    type: 'departmental' as 'departmental', 
+    image: 'assets/default-event.png', 
   };
 
   this.eventService.createEvent(newEvent).subscribe(event => {
@@ -140,13 +140,11 @@ addEvent() {
     this.showDeleteDialog = true;
   }
 
-  // Cancel delete dialog
   cancelDelete() {
     this.showDeleteDialog = false;
     this.eventToDelete = null;
   }
 
-  // Confirm delete
   async confirmDelete() {
     if (!this.eventToDelete) return;
     const loading = await this.loadingController.create({

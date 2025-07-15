@@ -1,3 +1,4 @@
+
 import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ModalController, LoadingController, AlertController } from '@ionic/angular';
@@ -42,16 +43,15 @@ private createForm() {
     title: ['', [Validators.required, Validators.minLength(3)]],
     description: ['', [Validators.required, Validators.minLength(10)]],
     date: ['', Validators.required],
-    hours: ['', Validators.required], // Hours dropdown
-    minutes: ['', Validators.required], // Minutes dropdown
-    ampm: ['', Validators.required], // AM/PM dropdown
+    hours: ['', Validators.required], 
+    minutes: ['', Validators.required], 
+    ampm: ['', Validators.required], 
     venue: ['', [Validators.required, Validators.minLength(3)]],
     department: [Department.CITE, Validators.required],
     type: ['departmental', Validators.required]
   });
 
 
-    // If user can create university events, enable the type selection
     if (!this.authService.canCreateUniversityEvents()) {
       this.eventForm.get('type')?.setValue('departmental');
       this.eventForm.get('type')?.disable();
@@ -60,7 +60,6 @@ private createForm() {
 
   private populateForm() {
     if (this.event) {
-      // Parse the time field if it exists
       let hours = '';
       let minutes = '';
       let ampm = '';
@@ -91,56 +90,118 @@ private createForm() {
   async onSubmit() {
     if (this.eventForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
-      
+      const formValue = this.eventForm.getRawValue();
+
+      let dateValue = formValue.date;
+      if (dateValue instanceof Date) {
+        dateValue = dateValue.toISOString().split('T')[0];
+      }
+      if (!dateValue || !/^\d{4}-\d{2}-\d{2}$/.test(dateValue)) {
+        this.isSubmitting = false;
+        await this.showErrorAlert('Please select a valid date.');
+        return;
+      }
+
+      const eventData: CreateEventDto = {
+        title: formValue.title.trim(),
+        description: formValue.description.trim(),
+        date: dateValue,
+        time: `${formValue.hours}:${formValue.minutes} ${formValue.ampm}`,
+        venue: formValue.venue.trim(),
+        department: formValue.department,
+        type: formValue.type
+      };
+
+      const eventDateTime = new Date(`${eventData.date}T${this.convertTo24Hour(eventData.time)}`);
+      const now = new Date();
+      if (eventDateTime < now) {
+        this.isSubmitting = false;
+        await this.showErrorAlert('Cannot add events in the past.');
+        return;
+      }
+
+      const allEvents = this.eventService.getCurrentEventsArray();
+      const isDuplicate = allEvents.some(ev =>
+        ev.title.trim().toLowerCase() === eventData.title.toLowerCase() &&
+        ev.date === eventData.date &&
+        ev.time === eventData.time &&
+        (this.mode !== 'edit' || (this.event && ev.id !== this.event.id))
+      );
+      if (isDuplicate) {
+        this.isSubmitting = false;
+        await this.showErrorAlert('An event with the same title, date, and time already exists.');
+        return;
+      }
+
       const loading = await this.loadingController.create({
         message: this.mode === 'create' ? 'Creating event...' : 'Updating event...',
       });
       await loading.present();
 
-      const formValue = this.eventForm.getRawValue();
-      const eventData: CreateEventDto = {
-        title: formValue.title,
-        description: formValue.description,
-        date: formValue.date,
-        time: `${formValue.hours}:${formValue.minutes} ${formValue.ampm}`,
-        venue: formValue.venue,
-        department: formValue.department,
-        type: formValue.type
-      };
-
-      if (this.mode === 'create') {
-        this.eventService.createEvent(eventData).subscribe({
-          next: async (newEvent) => {
-            await loading.dismiss();
-            this.isSubmitting = false;
-            await this.showSuccessAlert('Event created successfully!');
-            this.dismiss(newEvent);
-          },
-          error: async (error) => {
-            await loading.dismiss();
-            this.isSubmitting = false;
-            await this.showErrorAlert('Failed to create event');
-          }
-        });
-      } else if (this.event) {
-        this.eventService.updateEvent(this.event.id, eventData).subscribe({
-          next: async (updatedEvent) => {
-            await loading.dismiss();
-            this.isSubmitting = false;
-            if (updatedEvent) {
-              await this.showSuccessAlert('Event updated successfully!');
-              this.dismiss(updatedEvent);
-            } else {
+      try {
+        if (this.mode === 'create') {
+          this.eventService.createEvent(eventData).subscribe({
+            next: async (newEvent) => {
+              await loading.dismiss();
+              this.isSubmitting = false;
+              await this.showSuccessAlert('Event created successfully!');
+              this.dismiss(newEvent);
+            },
+            error: async (error) => {
+              await loading.dismiss();
+              this.isSubmitting = false;
+              await this.showErrorAlert('Failed to create event');
+            }
+          });
+        } else if (this.event) {
+          this.eventService.updateEvent(this.event.id, eventData).subscribe({
+            next: async (updatedEvent) => {
+              await loading.dismiss();
+              this.isSubmitting = false;
+              if (updatedEvent) {
+                await this.showSuccessAlert('Event updated successfully!');
+                this.dismiss(updatedEvent);
+              } else {
+                await this.showErrorAlert('Failed to update event');
+              }
+            },
+            error: async (error) => {
+              await loading.dismiss();
+              this.isSubmitting = false;
               await this.showErrorAlert('Failed to update event');
             }
-          },
-          error: async (error) => {
-            await loading.dismiss();
-            this.isSubmitting = false;
-            await this.showErrorAlert('Failed to update event');
-          }
-        });
+          });
+        }
+      } catch (err: any) {
+        await loading.dismiss();
+        this.isSubmitting = false;
+        await this.showErrorAlert(err?.message || 'Invalid event data.');
       }
+    }
+  }
+
+  private convertTo24Hour(time12h: string): string {
+    const [time, modifier] = time12h.split(' ');
+    let [hours, minutes] = time.split(':');
+    let h = parseInt(hours, 10);
+    if (modifier.toUpperCase() === 'PM' && h < 12) h += 12;
+    if (modifier.toUpperCase() === 'AM' && h === 12) h = 0;
+    return `${h.toString().padStart(2, '0')}:${minutes}:00`;
+  }
+
+  onDateChange(event: CustomEvent) {
+    let value = event.detail?.value;
+    if (typeof value === 'string' && value.includes('T')) {
+      value = value.split('T')[0];
+    }
+    const dateControl = this.eventForm.get('date');
+    if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      dateControl?.setValue(value);
+      if (dateControl?.hasError('invalidDate')) {
+        dateControl.setErrors(null);
+      }
+    } else {
+      dateControl?.setErrors({ invalidDate: true });
     }
   }
 
@@ -170,7 +231,6 @@ private createForm() {
     return this.authService.canCreateUniversityEvents();
   }
 
-  // Form getters for validation
   get title() { return this.eventForm.get('title'); }
   get description() { return this.eventForm.get('description'); }
   get date() { return this.eventForm.get('date'); }
