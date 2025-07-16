@@ -50,7 +50,7 @@ export class LoginPage implements OnInit {
   async onLogin() {
     if (this.loginForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
-      
+
       const loading = await this.loadingController.create({
         message: 'Logging in...',
         duration: 10000
@@ -58,12 +58,12 @@ export class LoginPage implements OnInit {
       await loading.present();
 
       const credentials = this.loginForm.value;
-      
+
       this.authService.login(credentials).subscribe({
         next: async (result) => {
           await loading.dismiss();
           this.isSubmitting = false;
-          
+
           if (result.success) {
             this.router.navigate(['/dashboard']);
           } else {
@@ -88,7 +88,6 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
-  // Getter methods for form validation
   get email() { return this.loginForm.get('email'); }
   get password() { return this.loginForm.get('password'); }
 }

@@ -27,11 +27,9 @@ export class DashboardPage implements OnInit {
   currentView: 'list' | 'calendar' = 'list';
   departments = Object.values(Department);
 
-  // For custom event details dialog
   showEventDetails: boolean = false;
   selectedEvent: Event | null = null;
 
-  // Calendar configuration
   calendarOptions: CalendarOptions = {
     initialView: 'dayGridMonth',
     plugins: [dayGridPlugin, timeGridPlugin, interactionPlugin],
@@ -49,7 +47,6 @@ bulletinImages: string[] = [
   'assets/buevent1.jpg',
    'assets/buevent2.jpg',
   'assets/buevent3.jpg',
-  // Add more image paths as needed
 ];
 currentBulletinIndex: number = 0;
 
@@ -117,7 +114,7 @@ nextBulletinImage() {
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
-        this.loadEvents(); // Refresh events list
+        this.loadEvents(); 
       }
     });
 
@@ -135,7 +132,7 @@ nextBulletinImage() {
 
     modal.onDidDismiss().then((result) => {
       if (result.data) {
-        this.loadEvents(); // Refresh events list
+        this.loadEvents(); 
       }
     });
 
@@ -210,7 +207,6 @@ nextBulletinImage() {
     await actionSheet.present();
   }
 
-  // Custom event details dialog methods
   openEventDetails(event: Event) {
     this.selectedEvent = event;
     this.showEventDetails = true;
@@ -271,7 +267,6 @@ nextBulletinImage() {
     return colors[department] || 'medium';
   }
 
-  // View switching methods
   switchToListView() {
     this.currentView = 'list';
   }
@@ -281,9 +276,7 @@ nextBulletinImage() {
     this.updateCalendarEvents();
   }
 
-  // Calendar methods
-  // (Removed duplicate, now handled above with time formatting)
-
+ 
   handleEventClick(info: any) {
     const originalEvent = info.event.extendedProps.originalEvent;
     this.showEventOptions(originalEvent);
@@ -291,7 +284,7 @@ nextBulletinImage() {
 
   getCalendarEventColor(department: Department, type: string): string {
     if (type === 'university') {
-      return '#3880ff'; // Primary blue
+      return '#3880ff';
     }
     
     const colors: { [key in Department]: string } = {
@@ -307,23 +300,19 @@ nextBulletinImage() {
     return colors[department] || '#92949c';
   }
 
-  // Override filterEvents to update calendar when filters change
   filterEvents(events: Event[]) {
     let filtered = events;
 
-    // Filter by segment (all, university, departmental)
     if (this.selectedSegment === 'university') {
       filtered = filtered.filter(event => event.type === 'university');
     } else if (this.selectedSegment === 'departmental') {
       filtered = filtered.filter(event => event.type === 'departmental');
     }
 
-    // Filter by department
     if (this.selectedDepartment !== 'all') {
       filtered = filtered.filter(event => event.department === this.selectedDepartment);
     }
 
-    // Filter by search term (title, venue, description)
     if (this.searchTerm && this.searchTerm.trim() !== '') {
       const term = this.searchTerm.trim().toLowerCase();
       filtered = filtered.filter(event =>
@@ -334,13 +323,11 @@ nextBulletinImage() {
     }
 
     this.filteredEvents = filtered.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    // Update calendar if in calendar view
     if (this.currentView === 'calendar') {
       this.updateCalendarEvents();
     }
   }
 
-  // Ensure time is in HH:mm:ss for FullCalendar
   formatTime(time: string): string {
     if (!time) return '00:00:00';
     if (/^\d{2}:\d{2}:\d{2}$/.test(time)) return time;
@@ -348,7 +335,6 @@ nextBulletinImage() {
     return '00:00:00';
   }
 
-  // Update updateCalendarEvents to use formatTime
   updateCalendarEvents() {
     const calendarEvents: EventInput[] = this.filteredEvents.map(event => ({
       id: event.id,

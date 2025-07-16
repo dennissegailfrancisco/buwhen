@@ -33,7 +33,6 @@ export class EventService {
   ];
 
   constructor(private storageService: StorageService) {
-    // DEV ONLY: Always clear local storage for events to load mock data (remove this for production)
     this.storageService.remove(this.STORAGE_KEY);
     const stored = this.storageService.get<Event[]>(this.STORAGE_KEY);
     if (stored && Array.isArray(stored) && stored.length > 0) {
@@ -165,12 +164,11 @@ export class EventService {
     return {
       ...event,
       formattedDate: this.formatDate(event.date),
-      formattedTime: event.time, // Already in display format from modal
+      formattedTime: event.time, 
       formattedDateTime: `${this.formatDate(event.date)} at ${event.time}`
     };
   }
 
-  // Helper method to format date
   private formatDate(dateString: string): string {
     try {
       const date = new Date(dateString + 'T00:00:00'); 
@@ -185,18 +183,15 @@ export class EventService {
     }
   }
 
-  // Validate event data from modal component
   private validateEventData(eventData: CreateEventDto): CreateEventDto {
     const validated = { ...eventData };
 
-    // Validate time format (should be HH:MM AM/PM from modal)
     if (validated.time) {
       const timePattern = /^(0?[1-9]|1[0-2]):[0-5][0-9]\s*(AM|PM)$/i;
       if (!timePattern.test(validated.time.trim())) {
         console.warn('Invalid time format received from modal:', validated.time);
         throw new Error('Invalid time format');
       } else {
-        // Normalize the format
         const timeParts = validated.time.trim().match(/^(\d{1,2}):(\d{2})\s*(AM|PM)$/i);
         if (timeParts) {
           const hours = timeParts[1].padStart(2, '0');
@@ -207,17 +202,14 @@ export class EventService {
       }
     }
 
-    // Validate date format
     if (validated.date) {
       const datePattern = /^\d{4}-\d{2}-\d{2}$/;
       if (!datePattern.test(validated.date)) {
         console.warn('Invalid date format received from modal:', validated.date);
-        // Instead of forcing today, just throw error and let form validation handle it
         throw new Error('Invalid date format');
       }
     }
 
-    // Trim string fields
     validated.title = validated.title?.trim() || '';
     validated.description = validated.description?.trim() || '';
     validated.venue = validated.venue?.trim() || '';
