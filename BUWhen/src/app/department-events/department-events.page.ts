@@ -17,7 +17,6 @@ export class DepartmentEventsPage implements OnInit, OnDestroy {
   events: Event[] = [];
   private eventsSubscription?: Subscription;
 
-  // For custom delete dialog
   showDeleteDialog: boolean = false;
   eventToDelete: string | null = null;
 
@@ -45,12 +44,10 @@ export class DepartmentEventsPage implements OnInit, OnDestroy {
 
   loadEvents() {
     if (this.department) {
-      // Unsubscribe from previous subscription
       if (this.eventsSubscription) {
         this.eventsSubscription.unsubscribe();
       }
 
-      // Subscribe to events for this department
       this.eventsSubscription = this.eventService.getEventsByDepartment(this.department).subscribe({
         next: (events) => {
           this.events = events;
@@ -80,9 +77,9 @@ addEvent() {
     date: '2025-12-01',
     time: '10:00',
     venue: 'New Venue',
-    department: department, // Ensured department is not null
-    type: 'departmental' as 'departmental', // Explicitly typed as 'departmental'
-    image: 'assets/default-event.png', // Optional image property
+    department: department, 
+    type: 'departmental' as 'departmental', 
+    image: 'assets/default-event.png', 
   };
 
   this.eventService.createEvent(newEvent).subscribe(event => {
@@ -118,12 +115,10 @@ addEvent() {
         console.log('Modal dismissed with data:', result.data);
         
         if (event) {
-          // Editing existing event - data comes from modal's update operation
-          this.loadEvents(); // Refresh the events list
+          this.loadEvents();
           await this.showSuccessAlert('Event updated successfully!');
         } else {
-          // Creating new event - data comes from modal's create operation
-          this.loadEvents(); // Refresh the events list
+          this.loadEvents(); 
           await this.showSuccessAlert('Event created successfully!');
         }
       } else {
@@ -134,19 +129,16 @@ addEvent() {
     return await modal.present();
   }
 
-  // Show custom delete dialog
   deleteEvent(eventId: string) {
     this.eventToDelete = eventId;
     this.showDeleteDialog = true;
   }
 
-  // Cancel delete dialog
   cancelDelete() {
     this.showDeleteDialog = false;
     this.eventToDelete = null;
   }
 
-  // Confirm delete
   async confirmDelete() {
     if (!this.eventToDelete) return;
     const loading = await this.loadingController.create({
@@ -215,7 +207,6 @@ addEvent() {
     }
   }
 
-  // Utility method to format events for display
   getFormattedEvent(event: Event) {
     return this.eventService.formatEventForDisplay(event);
   }

@@ -50,15 +50,12 @@ export class AuthService {
   ];
 
   constructor() {
-    // Check if user is already logged in from localStorage
     this.checkStoredUser();
   }
 
   login(credentials: LoginCredentials): Observable<{ success: boolean; user?: User; message?: string }> {
     return new Observable(observer => {
-      // Simulate API call delay
       setTimeout(() => {
-        // Mock authentication logic
         const user = this.mockUsers.find(u => u.email === credentials.email);
         
         if (user && credentials.password === 'password123') {
@@ -109,7 +106,6 @@ export class AuthService {
     }
   }
 
-  // Helper method to check user permissions
   canManageEvents(): boolean {
     const user = this.getCurrentUser();
     return user?.role === 'admin' || user?.role === 'faculty';

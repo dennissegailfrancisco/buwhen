@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LoadingController, AlertController } from '@ionic/angular';
+import { LoadingController, AlertController, ToastController } from '@ionic/angular';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -19,8 +19,18 @@ export class LoginPage implements OnInit {
     private authService: AuthService,
     private router: Router,
     private loadingController: LoadingController,
-    private alertController: AlertController
+    private alertController: AlertController,
+    private toastController: ToastController
   ) { }
+  async showComingSoon() {
+    const toast = await this.toastController.create({
+      message: 'This feature is coming soon!',
+      duration: 2000,
+      color: 'light',
+      position: 'top'
+    });
+    await toast.present();
+  }
 
   ngOnInit() {
     this.createLoginForm();
@@ -40,7 +50,7 @@ export class LoginPage implements OnInit {
   async onLogin() {
     if (this.loginForm.valid && !this.isSubmitting) {
       this.isSubmitting = true;
-      
+
       const loading = await this.loadingController.create({
         message: 'Logging in...',
         duration: 10000
@@ -48,12 +58,12 @@ export class LoginPage implements OnInit {
       await loading.present();
 
       const credentials = this.loginForm.value;
-      
+
       this.authService.login(credentials).subscribe({
         next: async (result) => {
           await loading.dismiss();
           this.isSubmitting = false;
-          
+
           if (result.success) {
             this.router.navigate(['/dashboard']);
           } else {
@@ -78,7 +88,6 @@ export class LoginPage implements OnInit {
     await alert.present();
   }
 
-  // Getter methods for form validation
   get email() { return this.loginForm.get('email'); }
   get password() { return this.loginForm.get('password'); }
 }
